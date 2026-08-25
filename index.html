@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f4ec" />
+    <meta
+      name="description"
+      content="RTI Saathi — a low-data, multilingual reimagining of India's Right to Information journey."
+    />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>RTI Saathi — Your right, made simple</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <div class="topline" aria-hidden="true"><i></i><i></i><i></i></div>
+
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="RTI Saathi home">
+        <span class="brand-mark" aria-hidden="true"><span>अ</span></span>
+        <span
+          ><strong>RTI Saathi</strong
+          ><small data-i18n="brandSub"
+            >Right to Information, simplified</small
+          ></span
+        >
+      </a>
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#how" data-i18n="navHow">How it works</a>
+        <a href="#examples" data-i18n="navAsk">What can I ask?</a>
+        <button type="button" class="text-button" data-action="track" data-i18n="track">
+          Track request
+        </button>
+      </nav>
+      <div class="header-actions">
+        <button type="button"
+          class="lite-toggle"
+          id="liteToggle"
+          aria-pressed="false"
+          title="Reduce motion and data use"
+        >
+          <span aria-hidden="true">◒</span><span data-i18n="lite">Lite</span>
+        </button>
+        <label class="language-control">
+          <span class="sr-only">Choose language</span>
+          <span aria-hidden="true">文</span>
+          <select id="languageSelect" aria-label="Choose language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="bn">বাংলা</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+            <option value="mr">मराठी</option>
+            <option value="gu">ગુજરાતી</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="ml">മലയാളം</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="ur">اردو</option>
+            <option value="or">ଓଡ଼ିଆ</option>
+            <option value="as">অসমীয়া</option>
+            <option value="sa">संस्कृतम्</option>
+            <option value="ks">کٲشُر</option>
+            <option value="ne">नेपाली</option>
+            <option value="sd">سنڌي</option>
+            <option value="kok">कोंकणी</option>
+            <option value="mni">মৈতৈলোন্</option>
+            <option value="brx">बड़ो</option>
+            <option value="doi">डोगरी</option>
+            <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
+          </select>
+        </label>
+        <button type="button"
+          class="menu-button"
+          id="menuButton"
+          aria-expanded="false"
+          aria-controls="mobileMenu"
+        >
+          <span></span><span></span><span></span
+          ><span class="sr-only">Menu</span>
+        </button>
+      </div>
+      <div class="mobile-menu" id="mobileMenu" hidden>
+        <a href="#how" data-i18n="navHow">How it works</a
+        ><a href="#examples" data-i18n="navAsk">What can I ask?</a>
+        <button type="button" class="text-button" data-action="track" data-i18n="track">
+          Track request
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="home">
+        <div class="hero-copy">
+          <div class="eyebrow">
+            <span class="pulse" aria-hidden="true"></span
+            ><span data-i18n="eyebrow">A citizen-first RTI experience</span>
+          </div>
+          <h1>
+            <span data-i18n="heroLine1">Your question.</span><br /><em
+              data-i18n="heroLine2"
+              >Your right to know.</em
+            >
+          </h1>
+          <p class="hero-intro" data-i18n="heroIntro">
+            Ask any Central Government public authority for information—in plain
+            language, from any phone.
+          </p>
+          <div class="hero-actions">
+            <button type="button" class="primary-button" data-action="start">
+              <span data-i18n="start">Start an RTI request</span
+              ><span aria-hidden="true">→</span>
+            </button>
+            <button type="button" class="secondary-button" data-action="track">
+              <span class="scan-icon" aria-hidden="true"></span
+              ><span data-i18n="track">Track request</span>
+            </button>
+          </div>
+          <p class="quiet-note">
+            <span aria-hidden="true">✓</span>
+            <span data-i18n="noAccount"
+              >No account needed · Draft saves on this device</span
+            >
+          </p>
+        </div>
+
+        <section class="hero-guide" aria-label="RTI request overview">
+          <div class="guide-orbit orbit-one" aria-hidden="true"></div>
+          <div class="guide-orbit orbit-two" aria-hidden="true"></div>
+          <article class="guide-card">
+            <div class="guide-top">
+              <span class="mini-seal" aria-hidden="true">सा</span
+              ><span data-i18n="quickGuide">Your quick guide</span
+              ><small>1 / 3</small>
+            </div>
+            <div class="guide-illustration" aria-hidden="true">
+              <div class="paper">
+                <span></span><span></span><span></span><b>?</b>
+              </div>
+              <div class="person"><i></i><b></b></div>
+            </div>
+            <h2 data-i18n="guideTitle">
+              First, tell us who your question is for
+            </h2>
+            <p data-i18n="guideBody">
+              We’ll help you choose the right government authority. You don’t
+              need to know the department name.
+            </p>
+            <button type="button" data-action="start" class="guide-link">
+              <span data-i18n="helpChoose">Help me choose</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </article>
+          <div class="floating-note note-one">
+            <span>₹10</span><small data-i18n="fee">standard fee</small>
+          </div>
+          <div class="floating-note note-two">
+            <span>30</span><small data-i18n="days">days to reply*</small>
+          </div>
+        </section>
+      </section>
+
+      <section class="trust-strip" aria-label="Service principles">
+        <div>
+          <span aria-hidden="true">◉</span>
+          <p>
+            <strong data-i18n="lowData">Works on low data</strong
+            ><small data-i18n="lowDataSub">No heavy images or video</small>
+          </p>
+        </div>
+        <div>
+          <span aria-hidden="true">文</span>
+          <p>
+            <strong data-i18n="languages">22 Indian languages</strong
+            ><small data-i18n="languagesSub"
+              >Choose the language you trust</small
+            >
+          </p>
+        </div>
+        <div>
+          <span aria-hidden="true">♿</span>
+          <p>
+            <strong data-i18n="accessible">Accessible by design</strong
+            ><small data-i18n="accessibleSub"
+              >Keyboard, screen reader &amp; large text ready</small
+            >
+          </p>
+        </div>
+        <div>
+          <span aria-hidden="true">⌁</span>
+          <p>
+            <strong data-i18n="offline">Draft works offline</strong
+            ><small data-i18n="offlineSub"
+              >Submit when your signal returns</small
+            >
+          </p>
+        </div>
+      </section>
+
+      <section class="how-section" id="how">
+        <div class="section-heading">
+          <span>01</span>
+          <div>
+            <p data-i18n="simpleProcess">A simple process</p>
+            <h2 data-i18n="threeSteps">
+              From question to answer in three clear steps.
+            </h2>
+          </div>
+        </div>
+        <div class="steps-grid">
+          <article>
+            <span class="step-number">1</span>
+            <div class="step-icon ask-icon" aria-hidden="true">?</div>
+            <h3 data-i18n="step1Title">Ask in your own words</h3>
+            <p data-i18n="step1Body">
+              Tell us what information you need. Helpful prompts turn it into a
+              clear RTI request.
+            </p>
+          </article>
+          <article>
+            <span class="step-number">2</span>
+            <div class="step-icon route-icon" aria-hidden="true">⌁</div>
+            <h3 data-i18n="step2Title">We route it correctly</h3>
+            <p data-i18n="step2Body">
+              Answer two simple questions and we guide you to the right Central
+              or State authority.
+            </p>
+          </article>
+          <article>
+            <span class="step-number">3</span>
+            <div class="step-icon bell-icon" aria-hidden="true">✓</div>
+            <h3 data-i18n="step3Title">Track every update</h3>
+            <p data-i18n="step3Body">
+              Keep one reference number. See replies, extra fees, and appeal
+              dates in one timeline.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="examples-section" id="examples">
+        <div class="examples-copy">
+          <span class="section-label" data-i18n="askLabel"
+            >WHAT CAN I ASK?</span
+          >
+          <h2 data-i18n="examplesTitle">
+            Public information belongs to the public.
+          </h2>
+          <p data-i18n="examplesBody">
+            Ask for records, documents, reports, or the status of government
+            work. Avoid asking for opinions or explanations that are not already
+            on record.
+          </p>
+          <button type="button" class="inline-button" data-action="start">
+            <span data-i18n="tryQuestion">Try your question</span> →
+          </button>
+        </div>
+        <div class="question-stack">
+          <article>
+            <span>01</span>
+            <p data-i18n="example1">
+              “How much money was sanctioned and spent on repairing the road in
+              my village?”
+            </p>
+            <small data-i18n="category1">Public works</small>
+          </article>
+          <article>
+            <span>02</span>
+            <p data-i18n="example2">
+              “Please provide the beneficiary list for the housing scheme in my
+              panchayat.”
+            </p>
+            <small data-i18n="category2">Welfare scheme</small>
+          </article>
+          <article>
+            <span>03</span>
+            <p data-i18n="example3">
+              “What action was taken on my complaint dated 12 June?”
+            </p>
+            <small data-i18n="category3">Complaint status</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <div>
+          <span class="section-label" data-i18n="readyLabel"
+            >READY WHEN YOU ARE</span
+          >
+          <h2 data-i18n="ctaTitle">A question can begin change.</h2>
+          <p data-i18n="ctaBody">
+            Your draft stays on this device until you are ready to submit.
+          </p>
+        </div>
+        <button type="button" class="light-button" data-action="start">
+          <span data-i18n="start">Start an RTI request</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </section>
+    </main>
+
+    <footer>
+      <div>
+        <strong>RTI Saathi</strong>
+        <p data-i18n="prototype">
+          An independent hackathon prototype. Not an official Government of
+          India service.
+        </p>
+      </div>
+      <div>
+        <a href="https://rti.dopt.gov.in/" target="_blank" rel="noopener"
+          >Official RTI Gateway ↗</a
+        ><a href="https://rtionline.gov.in/" target="_blank" rel="noopener"
+          >Official RTI Online ↗</a
+        >
+      </div>
+    </footer>
+
+    <div class="modal" id="requestModal" hidden>
+      <div class="modal-backdrop" data-action="close-modal"></div>
+      <section
+        class="modal-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <header>
+          <div>
+            <span class="modal-kicker" data-i18n="guidedRequest"
+              >GUIDED REQUEST</span
+            >
+            <h2 id="modalTitle" data-i18n="requestTitle">
+              Let’s find the right route.
+            </h2>
+          </div>
+          <button type="button"
+            class="close-button"
+            data-action="close-modal"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </header>
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span id="progressText">Step 1 of 4</span
+            ><span id="progressPercent">25%</span>
+          </div>
+          <div class="progress-bar"><i id="progressFill"></i></div>
+        </div>
+        <form id="requestForm">
+          <div class="form-step" data-step="1">
+            <fieldset>
+              <legend data-i18n="levelQuestion">
+                Is the information held by the Central Government or a
+                State/local body?
+              </legend>
+              <p class="field-help" data-i18n="levelHelp">
+                For example: Railways and passports are Central. Panchayats,
+                local police, and state electricity boards are usually State.
+              </p>
+              <label class="choice-card"
+                ><input
+                  type="radio"
+                  name="level"
+                  value="central"
+                  required
+                /><span
+                  ><b data-i18n="central">Central Government</b
+                  ><small data-i18n="centralExamples"
+                    >Railways, income tax, passports, national ministries</small
+                  ></span
+                ><i>→</i></label
+              >
+              <label class="choice-card"
+                ><input type="radio" name="level" value="state" /><span
+                  ><b data-i18n="state">State or local authority</b
+                  ><small data-i18n="stateExamples"
+                    >Panchayat, municipality, local police, state
+                    services</small
+                  ></span
+                ><i>↗</i></label
+              >
+              <label class="choice-card"
+                ><input type="radio" name="level" value="unsure" /><span
+                  ><b data-i18n="unsure">I’m not sure</b
+                  ><small data-i18n="unsureHelp"
+                    >Describe the issue and we’ll suggest a route</small
+                  ></span
+                ><i>?</i></label
+              >
+            </fieldset>
+          </div>
+          <div class="form-step" data-step="2" hidden>
+            <label class="field-label" for="topic" data-i18n="topicLabel"
+              >What is your question about?</label
+            >
+            <select id="topic" name="topic" required>
+              <option value="" data-i18n="chooseTopic">Choose a topic</option>
+              <option>Roads &amp; public works</option>
+              <option>Government scheme or benefit</option>
+              <option>Education</option>
+              <option>Health</option>
+              <option>Police or public safety</option>
+              <option>Land or property records</option>
+              <option>Employment or pension</option>
+              <option>Other public record</option>
+            </select>
+            <label
+              class="field-label"
+              for="authority"
+              data-i18n="authorityLabel"
+              >Department or place involved <small>— optional</small></label
+            ><input type="text"
+              id="authority"
+              name="authority"
+              maxlength="100"
+              placeholder="e.g. Indian Railways, Pune division"
+            />
+            <div class="tip-box">
+              <span aria-hidden="true">i</span>
+              <p data-i18n="routeTip">
+                You do not need the exact officer’s name. The public authority
+                must route a Central RTI to the correct officer when applicable.
+              </p>
+            </div>
+          </div>
+          <div class="form-step" data-step="3" hidden>
+            <label class="field-label" for="question" data-i18n="questionLabel"
+              >What information do you want?</label
+            >
+            <textarea
+              id="question"
+              name="question"
+              maxlength="3000"
+              rows="7"
+              required
+              placeholder="Ask for specific records, dates, amounts, or action-taken reports…"
+            ></textarea>
+            <div class="textarea-meta">
+              <button type="button" id="promptButton">
+                ✦
+                <span data-i18n="improve">Help me make this clear</span></button
+              ><span><b id="charCount">0</b>/3000</span>
+            </div>
+            <div class="prompt-result" id="promptResult" hidden></div>
+            <label class="upload-label"
+              ><input
+                type="file"
+                id="supportingFile"
+                accept=".pdf,image/*"
+              /><span>＋</span><b data-i18n="attach">Add supporting document</b
+              ><small data-i18n="attachSub"
+                >Optional · PDF or image · max 1 MB</small
+              ></label
+            >
+          </div>
+          <div class="form-step" data-step="4" hidden>
+            <div class="review-card">
+              <span class="review-icon">✓</span>
+              <h3 data-i18n="reviewTitle">Your draft is ready</h3>
+              <p data-i18n="reviewBody">
+                Review the details below. This prototype will generate a demo
+                reference; it will not send data to the government.
+              </p>
+              <dl id="reviewList"></dl>
+            </div>
+            <label class="check-row"
+              ><input type="checkbox" required /><span
+                data-i18n="citizenConfirm"
+                >I confirm I am an Indian citizen and the information above is
+                correct.</span
+              ></label
+            >
+            <div class="fee-row">
+              <span
+                ><b data-i18n="applicationFee">Application fee</b
+                ><small data-i18n="bplNote"
+                  >₹0 for applicants with valid BPL proof</small
+                ></span
+              ><strong>₹10</strong>
+            </div>
+          </div>
+          <div class="state-notice" id="stateNotice" hidden>
+            <strong data-i18n="stateRouteTitle"
+              >This request needs your State RTI portal.</strong
+            >
+            <p data-i18n="stateRouteBody">
+              The Central portal warns that State applications may be returned
+              without a refund. We’ll help you find the correct official State
+              portal.
+            </p>
+            <a
+              href="https://rti.dopt.gov.in/rtistatelink.php"
+              target="_blank"
+              rel="noopener"
+              data-i18n="findState"
+              >Find my State portal ↗</a
+            >
+          </div>
+          <footer class="form-footer">
+            <button type="button" class="back-button" id="backButton" hidden>
+              ← <span data-i18n="back">Back</span></button
+            ><span class="autosave" id="autosaveText"
+              >✓ <span data-i18n="saved">Saved on this device</span></span
+            ><button type="button" class="next-button" id="nextButton">
+              <span data-i18n="continue">Continue</span> →</button
+            ><button type="submit" class="next-button" id="submitButton" hidden>
+              <span data-i18n="createDemo">Create demo request</span> →
+            </button>
+          </footer>
+        </form>
+        <div class="success-state" id="successState" hidden>
+          <div class="success-mark">✓</div>
+          <span class="modal-kicker" data-i18n="demoComplete"
+            >DEMO COMPLETE</span
+          >
+          <h2 data-i18n="draftSaved">Your RTI draft is saved.</h2>
+          <p data-i18n="demoWarning">
+            Nothing was sent to the Government. Use the official portal to file
+            this request.
+          </p>
+          <div class="reference-box">
+            <span data-i18n="demoReference">Demo reference</span
+            ><strong id="demoReference">RTI-DEMO-000000</strong>
+          </div>
+          <div class="success-actions">
+            <a
+              href="https://rtionline.gov.in/"
+              target="_blank"
+              rel="noopener"
+              class="primary-button"
+              ><span data-i18n="officialPortal"
+                >Continue to official portal</span
+              >
+              ↗</a
+            ><button type="button"
+              class="secondary-button"
+              data-action="close-modal"
+              data-i18n="done"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal" id="trackModal" hidden>
+      <div class="modal-backdrop" data-action="close-track"></div>
+      <section
+        class="modal-panel small-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trackTitle"
+      >
+        <header>
+          <div>
+            <span class="modal-kicker" data-i18n="statusLookup"
+              >STATUS LOOKUP</span
+            >
+            <h2 id="trackTitle" data-i18n="trackTitle">Track your request</h2>
+          </div>
+          <button type="button"
+            class="close-button"
+            data-action="close-track"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </header>
+        <p data-i18n="trackHelp">
+          Enter your official registration number. We’ll take you to the secure
+          Government status page.
+        </p>
+        <label
+          class="field-label"
+          for="trackingNumber"
+          data-i18n="registrationNo"
+          >Registration number</label
+        ><input type="text"
+          id="trackingNumber"
+          class="large-input"
+          placeholder="e.g. DOP&amp;T/R/E/26/00123"
+        /><a
+          class="next-button full-button"
+          href="https://rtionline.gov.in/request/status.php"
+          target="_blank"
+          rel="noopener"
+          ><span data-i18n="checkOfficial">Check on official portal</span> ↗</a
+        >
+        <p class="privacy-note">
+          🔒
+          <span data-i18n="privacy"
+            >Your registration number is not stored or sent by this
+            prototype.</span
+          >
+        </p>
+      </section>
+    </div>
+
+    <div class="offline-toast" id="offlineToast" hidden>
+      <span>⌁</span>
+      <p>
+        <strong data-i18n="offlineNow">You’re offline</strong
+        ><small data-i18n="offlineNowSub"
+          >You can keep writing. Your draft is safe.</small
+        >
+      </p>
+    </div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
