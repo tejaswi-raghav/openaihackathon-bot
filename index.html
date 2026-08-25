@@ -16,9 +16,119 @@
     <a class="skip-link" href="#main">Skip to main content</a>
     <div class="topline" aria-hidden="true"><i></i><i></i><i></i></div>
 
+    <section
+      class="language-gate"
+      id="languageGate"
+      aria-labelledby="languageGateTitle"
+    >
+      <div class="language-gate__panel">
+        <div class="language-gate__identity">
+          <img
+            src="/assets/indian-emblem-official.webp"
+            alt="State Emblem of India"
+            width="72"
+            height="82"
+          />
+          <div>
+            <strong>RTI Saathi</strong
+            ><span>Hackathon prototype · सरकारी वेबसाइट नहीं</span>
+          </div>
+        </div>
+        <div class="language-gate__heading">
+          <span class="language-gate__step">पहला कदम · FIRST STEP</span>
+          <h1 id="languageGateTitle">अपनी भाषा चुनें</h1>
+          <p>Choose the language you read best</p>
+          <button type="button" id="hearLanguages" class="hear-button">
+            🔊 <span>सुनें · Listen</span>
+          </button>
+        </div>
+        <div
+          class="language-grid"
+          role="group"
+          aria-label="Choose your language"
+        >
+          <button type="button" data-lang="hi">
+            <b>हिन्दी</b><small>Hindi</small>
+          </button>
+          <button type="button" data-lang="en">
+            <b>English</b><small>अंग्रेज़ी</small>
+          </button>
+          <button type="button" data-lang="bn">
+            <b>বাংলা</b><small>Bengali</small>
+          </button>
+          <button type="button" data-lang="ta">
+            <b>தமிழ்</b><small>Tamil</small>
+          </button>
+          <button type="button" data-lang="te">
+            <b>తెలుగు</b><small>Telugu</small>
+          </button>
+          <button type="button" data-lang="mr">
+            <b>मराठी</b><small>Marathi</small>
+          </button>
+          <button type="button" data-lang="gu">
+            <b>ગુજરાતી</b><small>Gujarati</small>
+          </button>
+          <button type="button" data-lang="kn">
+            <b>ಕನ್ನಡ</b><small>Kannada</small>
+          </button>
+          <button type="button" data-lang="ml">
+            <b>മലയാളം</b><small>Malayalam</small>
+          </button>
+          <button type="button" data-lang="pa">
+            <b>ਪੰਜਾਬੀ</b><small>Punjabi</small>
+          </button>
+          <button type="button" data-lang="ur">
+            <b>اردو</b><small>Urdu</small>
+          </button>
+          <button type="button" data-lang="or">
+            <b>ଓଡ଼ିଆ</b><small>Odia</small>
+          </button>
+          <button type="button" data-lang="as">
+            <b>অসমীয়া</b><small>Assamese</small>
+          </button>
+          <button type="button" data-lang="sa">
+            <b>संस्कृतम्</b><small>Sanskrit</small>
+          </button>
+          <button type="button" data-lang="ks">
+            <b>کٲشُر</b><small>Kashmiri</small>
+          </button>
+          <button type="button" data-lang="ne">
+            <b>नेपाली</b><small>Nepali</small>
+          </button>
+          <button type="button" data-lang="sd">
+            <b>سنڌي</b><small>Sindhi</small>
+          </button>
+          <button type="button" data-lang="kok">
+            <b>कोंकणी</b><small>Konkani</small>
+          </button>
+          <button type="button" data-lang="mni">
+            <b>মৈতৈলোন্</b><small>Manipuri</small>
+          </button>
+          <button type="button" data-lang="brx">
+            <b>बड़ो</b><small>Bodo</small>
+          </button>
+          <button type="button" data-lang="doi">
+            <b>डोगरी</b><small>Dogri</small>
+          </button>
+          <button type="button" data-lang="sat">
+            <b>ᱥᱟᱱᱛᱟᱲᱤ</b><small>Santali</small>
+          </button>
+        </div>
+        <p class="language-gate__note">
+          आप इसे बाद में बदल सकते हैं · You can change this later
+        </p>
+      </div>
+    </section>
+
     <header class="site-header">
       <a class="brand" href="#home" aria-label="RTI Saathi home">
-        <span class="brand-mark" aria-hidden="true"><span>अ</span></span>
+        <img
+          class="brand-logo"
+          src="/assets/rti-official.gif"
+          alt="Right to Information"
+          width="118"
+          height="45"
+        />
         <span
           ><strong>RTI Saathi</strong
           ><small data-i18n="brandSub"
@@ -26,25 +136,23 @@
           ></span
         >
       </a>
+      <span class="header-prototype">HACKATHON PROTOTYPE</span>
       <nav class="desktop-nav" aria-label="Primary navigation">
         <a href="#how" data-i18n="navHow">How it works</a>
         <a href="#examples" data-i18n="navAsk">What can I ask?</a>
-        <button type="button" class="text-button" data-action="track" data-i18n="track">
+        <button
+          type="button"
+          class="text-button"
+          data-action="track"
+          data-i18n="track"
+        >
           Track request
         </button>
       </nav>
       <div class="header-actions">
-        <button type="button"
-          class="lite-toggle"
-          id="liteToggle"
-          aria-pressed="false"
-          title="Reduce motion and data use"
-        >
-          <span aria-hidden="true">◒</span><span data-i18n="lite">Lite</span>
-        </button>
         <label class="language-control">
           <span class="sr-only">Choose language</span>
-          <span aria-hidden="true">文</span>
+          <span aria-hidden="true">अ</span>
           <select id="languageSelect" aria-label="Choose language">
             <option value="en">English</option>
             <option value="hi">हिन्दी</option>
@@ -70,7 +178,8 @@
             <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ</option>
           </select>
         </label>
-        <button type="button"
+        <button
+          type="button"
           class="menu-button"
           id="menuButton"
           aria-expanded="false"
@@ -83,7 +192,12 @@
       <div class="mobile-menu" id="mobileMenu" hidden>
         <a href="#how" data-i18n="navHow">How it works</a
         ><a href="#examples" data-i18n="navAsk">What can I ask?</a>
-        <button type="button" class="text-button" data-action="track" data-i18n="track">
+        <button
+          type="button"
+          class="text-button"
+          data-action="track"
+          data-i18n="track"
+        >
           Track request
         </button>
       </div>
@@ -106,15 +220,46 @@
             Ask any Central Government public authority for information—in plain
             language, from any phone.
           </p>
-          <div class="hero-actions">
-            <button type="button" class="primary-button" data-action="start">
-              <span data-i18n="start">Start an RTI request</span
-              ><span aria-hidden="true">→</span>
+          <div class="citizen-actions" role="group" aria-label="RTI services">
+            <button
+              type="button"
+              class="citizen-action citizen-action--primary"
+              data-action="start"
+            >
+              <span class="citizen-action__icon" aria-hidden="true">＋</span>
+              <span
+                ><b data-i18n="start">File an RTI request</b
+                ><small data-i18n="startSub"
+                  >Ask for government information</small
+                ></span
+              >
+              <i aria-hidden="true">→</i>
             </button>
-            <button type="button" class="secondary-button" data-action="track">
-              <span class="scan-icon" aria-hidden="true"></span
-              ><span data-i18n="track">Track request</span>
+            <button type="button" class="citizen-action" data-action="track">
+              <span class="citizen-action__icon" aria-hidden="true">⌕</span>
+              <span
+                ><b data-i18n="track">Track request</b
+                ><small data-i18n="trackSub"
+                  >See reply or payment status</small
+                ></span
+              >
+              <i aria-hidden="true">→</i>
             </button>
+            <a
+              class="citizen-action"
+              href="https://rtionline.gov.in/guidelines.php?appeal&amp;&amp;pageid=8f14e45fceea167a5a36dedd4bea2543"
+              target="_blank"
+              rel="noopener"
+            >
+              <span class="citizen-action__icon" aria-hidden="true">↥</span>
+              <span
+                ><b data-i18n="appeal">File first appeal</b
+                ><small data-i18n="appealSub"
+                  >If no reply after 30 days</small
+                ></span
+              >
+              <i aria-hidden="true">↗</i>
+            </a>
           </div>
           <p class="quiet-note">
             <span aria-hidden="true">✓</span>
@@ -124,38 +269,41 @@
           </p>
         </div>
 
-        <section class="hero-guide" aria-label="RTI request overview">
-          <div class="guide-orbit orbit-one" aria-hidden="true"></div>
-          <div class="guide-orbit orbit-two" aria-hidden="true"></div>
-          <article class="guide-card">
-            <div class="guide-top">
-              <span class="mini-seal" aria-hidden="true">सा</span
-              ><span data-i18n="quickGuide">Your quick guide</span
-              ><small>1 / 3</small>
-            </div>
-            <div class="guide-illustration" aria-hidden="true">
-              <div class="paper">
-                <span></span><span></span><span></span><b>?</b>
-              </div>
-              <div class="person"><i></i><b></b></div>
-            </div>
-            <h2 data-i18n="guideTitle">
-              First, tell us who your question is for
-            </h2>
-            <p data-i18n="guideBody">
-              We’ll help you choose the right government authority. You don’t
-              need to know the department name.
-            </p>
-            <button type="button" data-action="start" class="guide-link">
-              <span data-i18n="helpChoose">Help me choose</span>
-              <span aria-hidden="true">→</span>
-            </button>
-          </article>
-          <div class="floating-note note-one">
-            <span>₹10</span><small data-i18n="fee">standard fee</small>
+        <section
+          class="citizen-visual"
+          aria-label="RTI access from a village home"
+        >
+          <div class="citizen-visual__frame">
+            <img
+              src="/assets/rural-rti-citizen-v1.webp"
+            alt="A rural Indian woman using a mobile phone with a folder of documents beside her"
+            width="900"
+            height="900"
+            loading="lazy"
+            decoding="async"
+          />
+            <span class="prototype-ribbon"
+              >CONCEPT · आधिकारिक वेबसाइट नहीं</span
+            >
           </div>
-          <div class="floating-note note-two">
-            <span>30</span><small data-i18n="days">days to reply*</small>
+          <div class="fact-card fact-card--fee">
+            <strong>₹10</strong><span data-i18n="fee">standard fee</span>
+          </div>
+          <div class="fact-card fact-card--reply">
+            <strong>30</strong><span data-i18n="days">days to reply*</span>
+          </div>
+          <div class="official-source">
+            <img
+              src="/assets/indian-emblem-official.webp"
+              alt=""
+              width="36"
+              height="42"
+            /><span
+              ><b data-i18n="officialRules">Based on official RTI rules</b
+              ><small data-i18n="officialRulesSub"
+                >Central Government requests only</small
+              ></span
+            >
           </div>
         </section>
       </section>
@@ -333,7 +481,8 @@
               Let’s find the right route.
             </h2>
           </div>
-          <button type="button"
+          <button
+            type="button"
             class="close-button"
             data-action="close-modal"
             aria-label="Close"
@@ -411,7 +560,8 @@
               for="authority"
               data-i18n="authorityLabel"
               >Department or place involved <small>— optional</small></label
-            ><input type="text"
+            ><input
+              type="text"
               id="authority"
               name="authority"
               maxlength="100"
@@ -534,7 +684,8 @@
                 >Continue to official portal</span
               >
               ↗</a
-            ><button type="button"
+            ><button
+              type="button"
               class="secondary-button"
               data-action="close-modal"
               data-i18n="done"
@@ -561,7 +712,8 @@
             >
             <h2 id="trackTitle" data-i18n="trackTitle">Track your request</h2>
           </div>
-          <button type="button"
+          <button
+            type="button"
             class="close-button"
             data-action="close-track"
             aria-label="Close"
@@ -578,7 +730,8 @@
           for="trackingNumber"
           data-i18n="registrationNo"
           >Registration number</label
-        ><input type="text"
+        ><input
+          type="text"
           id="trackingNumber"
           class="large-input"
           placeholder="e.g. DOP&amp;T/R/E/26/00123"

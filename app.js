@@ -13,7 +13,13 @@ const translations = {
     heroLine2: "जानना आपका अधिकार।",
     heroIntro:
       "किसी भी केंद्रीय सरकारी लोक प्राधिकरण से अपनी भाषा में, किसी भी फ़ोन से जानकारी माँगें।",
-    start: "RTI आवेदन शुरू करें",
+    start: "RTI आवेदन करें",
+    startSub: "सरकार से जानकारी माँगें",
+    trackSub: "जवाब या भुगतान की स्थिति देखें",
+    appeal: "पहली अपील करें",
+    appealSub: "30 दिन में जवाब न मिले तो",
+    officialRules: "आधिकारिक RTI नियमों पर आधारित",
+    officialRulesSub: "केवल केंद्र सरकार के आवेदन",
     noAccount: "खाता आवश्यक नहीं · ड्राफ्ट इस डिवाइस पर सहेजा जाता है",
     quickGuide: "आपकी आसान मार्गदर्शिका",
     guideTitle: "पहले बताएं, आपका सवाल किसके लिए है",
@@ -109,6 +115,10 @@ const translations = {
     heroIntro: "সহজ ভাষায়, যেকোনো ফোন থেকে কেন্দ্রীয় সরকারের কাছে তথ্য চান।",
     start: "RTI আবেদন শুরু করুন",
     track: "আবেদন ট্র্যাক করুন",
+    startSub: "সরকারি তথ্য চান",
+    trackSub: "উত্তর বা পেমেন্ট দেখুন",
+    appeal: "প্রথম আপিল করুন",
+    appealSub: "৩০ দিনে উত্তর না পেলে",
     navHow: "কীভাবে কাজ করে",
     navAsk: "কী জানতে পারি?",
     lowData: "কম ডেটায় চলে",
@@ -123,6 +133,10 @@ const translations = {
       "எந்த தொலைபேசியிலிருந்தும் எளிய மொழியில் மத்திய அரசிடம் தகவல் கேளுங்கள்.",
     start: "RTI கோரிக்கையைத் தொடங்குங்கள்",
     track: "கோரிக்கையைக் கண்காணிக்க",
+    startSub: "அரசுத் தகவலைக் கேளுங்கள்",
+    trackSub: "பதில் அல்லது கட்டண நிலை",
+    appeal: "முதல் மேல்முறையீடு",
+    appealSub: "30 நாட்களில் பதில் இல்லை எனில்",
     navHow: "இது எப்படி வேலை செய்கிறது",
     navAsk: "நான் என்ன கேட்கலாம்?",
     lowData: "குறைந்த தரவில் இயங்கும்",
@@ -138,6 +152,10 @@ const translations = {
       "ఏ ఫోన్ నుంచైనా సరళమైన భాషలో కేంద్ర ప్రభుత్వ సమాచారాన్ని అడగండి.",
     start: "RTI అభ్యర్థన ప్రారంభించండి",
     track: "అభ్యర్థనను ట్రాక్ చేయండి",
+    startSub: "ప్రభుత్వ సమాచారాన్ని అడగండి",
+    trackSub: "సమాధానం లేదా చెల్లింపు చూడండి",
+    appeal: "మొదటి అప్పీల్ చేయండి",
+    appealSub: "30 రోజుల్లో సమాధానం లేకపోతే",
     navHow: "ఇది ఎలా పనిచేస్తుంది",
     navAsk: "నేను ఏమి అడగగలను?",
     lowData: "తక్కువ డేటాలో పనిచేస్తుంది",
@@ -151,6 +169,10 @@ const translations = {
     heroIntro: "कोणत्याही फोनवरून सोप्या भाषेत केंद्र सरकारकडे माहिती मागा.",
     start: "RTI अर्ज सुरू करा",
     track: "अर्जाचा मागोवा घ्या",
+    startSub: "सरकारी माहिती मागा",
+    trackSub: "उत्तर किंवा पेमेंट स्थिती पहा",
+    appeal: "पहिले अपील करा",
+    appealSub: "३० दिवसांत उत्तर न मिळाल्यास",
     navHow: "हे कसे चालते",
     navAsk: "मी काय विचारू शकतो?",
     lowData: "कमी डेटावर चालते",
@@ -164,6 +186,10 @@ const translations = {
     heroIntro: "કોઈપણ ફોનથી સરળ ભાષામાં કેન્દ્ર સરકાર પાસે માહિતી માંગો.",
     start: "RTI અરજી શરૂ કરો",
     track: "અરજી ટ્રૅક કરો",
+    startSub: "સરકારી માહિતી માંગો",
+    trackSub: "જવાબ અથવા ચુકવણી જુઓ",
+    appeal: "પ્રથમ અપીલ કરો",
+    appealSub: "30 દિવસમાં જવાબ ન મળે તો",
     navHow: "કેવી રીતે કામ કરે છે",
     navAsk: "હું શું પૂછી શકું?",
     lowData: "ઓછા ડેટા પર ચાલે છે",
@@ -178,6 +204,10 @@ const translations = {
       "ಯಾವುದೇ ಫೋನ್‌ನಿಂದ ಸರಳ ಭಾಷೆಯಲ್ಲಿ ಕೇಂದ್ರ ಸರ್ಕಾರದ ಮಾಹಿತಿಯನ್ನು ಕೇಳಿ.",
     start: "RTI ವಿನಂತಿ ಪ್ರಾರಂಭಿಸಿ",
     track: "ವಿನಂತಿ ಟ್ರ್ಯಾಕ್ ಮಾಡಿ",
+    startSub: "ಸರ್ಕಾರಿ ಮಾಹಿತಿ ಕೇಳಿ",
+    trackSub: "ಉತ್ತರ ಅಥವಾ ಪಾವತಿ ಸ್ಥಿತಿ ನೋಡಿ",
+    appeal: "ಮೊದಲ ಮೇಲ್ಮನವಿ ಸಲ್ಲಿಸಿ",
+    appealSub: "30 ದಿನಗಳಲ್ಲಿ ಉತ್ತರ ಇಲ್ಲದಿದ್ದರೆ",
     navHow: "ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ",
     navAsk: "ನಾನು ಏನು ಕೇಳಬಹುದು?",
     lowData: "ಕಡಿಮೆ ಡೇಟಾದಲ್ಲಿ ಕೆಲಸ",
@@ -192,6 +222,10 @@ const translations = {
       "ഏത് ഫോണിൽ നിന്നും ലളിതമായ ഭാഷയിൽ കേന്ദ്ര സർക്കാരിനോട് വിവരങ്ങൾ ചോദിക്കുക.",
     start: "RTI അപേക്ഷ ആരംഭിക്കുക",
     track: "അപേക്ഷ ട്രാക്ക് ചെയ്യുക",
+    startSub: "സർക്കാർ വിവരങ്ങൾ ചോദിക്കുക",
+    trackSub: "മറുപടി അല്ലെങ്കിൽ പണം നില കാണുക",
+    appeal: "ആദ്യ അപ്പീൽ നൽകുക",
+    appealSub: "30 ദിവസത്തിൽ മറുപടി ഇല്ലെങ്കിൽ",
     navHow: "ഇത് എങ്ങനെ പ്രവർത്തിക്കുന്നു",
     navAsk: "എന്ത് ചോദിക്കാം?",
     lowData: "കുറഞ്ഞ ഡാറ്റയിൽ പ്രവർത്തിക്കുന്നു",
@@ -206,6 +240,10 @@ const translations = {
     heroIntro: "ਕਿਸੇ ਵੀ ਫ਼ੋਨ ਤੋਂ ਸੌਖੀ ਭਾਸ਼ਾ ਵਿੱਚ ਕੇਂਦਰ ਸਰਕਾਰ ਤੋਂ ਜਾਣਕਾਰੀ ਮੰਗੋ।",
     start: "RTI ਬੇਨਤੀ ਸ਼ੁਰੂ ਕਰੋ",
     track: "ਬੇਨਤੀ ਟਰੈਕ ਕਰੋ",
+    startSub: "ਸਰਕਾਰੀ ਜਾਣਕਾਰੀ ਮੰਗੋ",
+    trackSub: "ਜਵਾਬ ਜਾਂ ਭੁਗਤਾਨ ਵੇਖੋ",
+    appeal: "ਪਹਿਲੀ ਅਪੀਲ ਕਰੋ",
+    appealSub: "30 ਦਿਨਾਂ ਵਿੱਚ ਜਵਾਬ ਨਾ ਮਿਲੇ",
     navHow: "ਇਹ ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ",
     navAsk: "ਮੈਂ ਕੀ ਪੁੱਛ ਸਕਦਾ ਹਾਂ?",
     lowData: "ਘੱਟ ਡੇਟਾ 'ਤੇ ਚੱਲਦਾ ਹੈ",
@@ -219,6 +257,10 @@ const translations = {
     heroIntro: "کسی بھی فون سے آسان زبان میں مرکزی حکومت سے معلومات مانگیں۔",
     start: "RTI درخواست شروع کریں",
     track: "درخواست ٹریک کریں",
+    startSub: "سرکاری معلومات مانگیں",
+    trackSub: "جواب یا ادائیگی دیکھیں",
+    appeal: "پہلی اپیل کریں",
+    appealSub: "30 دن میں جواب نہ ملے تو",
     navHow: "یہ کیسے کام کرتا ہے",
     navAsk: "میں کیا پوچھ سکتا ہوں؟",
     lowData: "کم ڈیٹا پر کام کرتا ہے",
@@ -231,13 +273,17 @@ const translations = {
     heroLine2: "ଜାଣିବା ଆପଣଙ୍କ ଅଧିକାର।",
     start: "RTI ଅନୁରୋଧ ଆରମ୍ଭ କରନ୍ତୁ",
     track: "ଅନୁରୋଧ ଟ୍ରାକ୍ କରନ୍ତୁ",
+    startSub: "ସରକାରୀ ସୂଚନା ମାଗନ୍ତୁ",
+    trackSub: "ଉତ୍ତର କିମ୍ବା ପେମେଣ୍ଟ ଦେଖନ୍ତୁ",
+    appeal: "ପ୍ରଥମ ଅପିଲ୍ କରନ୍ତୁ",
+    appealSub: "30 ଦିନରେ ଉତ୍ତର ନ ମିଳିଲେ",
     lowData: "କମ୍ ଡାଟାରେ କାମ କରେ",
     languages: "22 ଭାରତୀୟ ଭାଷା",
     offline: "ଅଫଲାଇନ୍ ଡ୍ରାଫ୍ଟ",
   },
 };
 const defaultCopy = Object.fromEntries(
-  $$('[data-i18n]').map((el) => [el.dataset.i18n, el.textContent.trim()]),
+  $$("[data-i18n]").map((el) => [el.dataset.i18n, el.textContent.trim()]),
 );
 let currentStep = 1,
   lastFocus = null;
@@ -396,12 +442,32 @@ $("#supportingFile").addEventListener("change", (e) => {
   }
 });
 $("#languageSelect").addEventListener("change", (e) =>
-  applyLanguage(e.target.value),
+  chooseLanguage(e.target.value),
 );
-$("#liteToggle").addEventListener("click", (e) => {
-  const on = document.documentElement.classList.toggle("lite");
-  e.currentTarget.setAttribute("aria-pressed", String(on));
-  localStorage.setItem("rti-lite", on ? "1" : "0");
+function chooseLanguage(lang) {
+  $("#languageSelect").value = lang;
+  applyLanguage(lang);
+  localStorage.setItem("rti-language-onboarded-v2", "1");
+  setLanguageGate(false);
+}
+function setLanguageGate(open) {
+  $("#languageGate").hidden = !open;
+  $(".site-header").inert = open;
+  $("#main").inert = open;
+  document.querySelector("body > footer").inert = open;
+  document.body.style.overflow = open ? "hidden" : "";
+}
+$$("[data-lang]").forEach((button) =>
+  button.addEventListener("click", () => chooseLanguage(button.dataset.lang)),
+);
+$("#hearLanguages").addEventListener("click", () => {
+  if (!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const message = new SpeechSynthesisUtterance(
+    "अपनी भाषा चुनें। Choose the language you read best.",
+  );
+  message.lang = "hi-IN";
+  speechSynthesis.speak(message);
 });
 $("#menuButton").addEventListener("click", (e) => {
   const open = e.currentTarget.getAttribute("aria-expanded") === "true";
@@ -429,14 +495,15 @@ networkState();
 const savedLang = localStorage.getItem("rti-language") || "en";
 $("#languageSelect").value = savedLang;
 applyLanguage(savedLang);
-loadDraft();
-if (
-  localStorage.getItem("rti-lite") === "1" ||
-  navigator.connection?.saveData
-) {
-  document.documentElement.classList.add("lite");
-  $("#liteToggle").setAttribute("aria-pressed", "true");
+if (localStorage.getItem("rti-language-onboarded-v2") === "1") {
+  setLanguageGate(false);
+} else {
+  setLanguageGate(true);
+  setTimeout(() => $('[data-lang="hi"]')?.focus(), 0);
 }
+loadDraft();
+if (navigator.connection?.saveData)
+  document.documentElement.classList.add("data-saver");
 if ("serviceWorker" in navigator)
   addEventListener("load", () =>
     navigator.serviceWorker.register("/sw.js").catch(() => {}),
