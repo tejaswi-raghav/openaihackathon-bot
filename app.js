@@ -236,34 +236,22 @@ const translations = {
     offline: "ଅଫଲାଇନ୍ ଡ୍ରାଫ୍ଟ",
   },
 };
-const fallbackLanguage = {
-  as: "bn",
-  sa: "hi",
-  ks: "ur",
-  ne: "hi",
-  sd: "ur",
-  kok: "mr",
-  mni: "bn",
-  brx: "hi",
-  doi: "hi",
-  sat: "hi",
-};
+const defaultCopy = Object.fromEntries(
+  $$('[data-i18n]').map((el) => [el.dataset.i18n, el.textContent.trim()]),
+);
 let currentStep = 1,
   lastFocus = null;
 const requestModal = $("#requestModal"),
   trackModal = $("#trackModal"),
   form = $("#requestForm");
 function applyLanguage(lang) {
-  const dict =
-    translations[lang] ||
-    translations[fallbackLanguage[lang]] ||
-    translations.en;
+  const dict = translations[lang] || translations.en;
   document.documentElement.lang = lang;
   document.documentElement.dir =
     lang === "ur" || lang === "ks" || lang === "sd" ? "rtl" : "ltr";
   $$("[data-i18n]").forEach((el) => {
     const key = el.dataset.i18n;
-    const val = dict[key] || translations.en[key];
+    const val = dict[key] || defaultCopy[key];
     if (val) el.textContent = val;
   });
   localStorage.setItem("rti-language", lang);

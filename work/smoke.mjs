@@ -34,6 +34,9 @@ if ($('#successState').hidden || !$('#demoReference').textContent.startsWith('RT
 $('#languageSelect').value = 'hi';
 $('#languageSelect').dispatchEvent(new window.Event('change', { bubbles: true }));
 if (!$('[data-i18n="heroLine1"]').textContent.includes('आपका')) throw new Error('Language switch failed');
+$('#languageSelect').value = 'as';
+$('#languageSelect').dispatchEvent(new window.Event('change', { bubbles: true }));
+if ($('[data-i18n="heroLine1"]').textContent.trim() !== 'Your question.') throw new Error('Untranslated-language English fallback failed');
 click('#liteToggle');
 if ($('#liteToggle').getAttribute('aria-pressed') !== 'true') throw new Error('Lite mode failed');
 
