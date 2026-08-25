@@ -61,14 +61,56 @@ $("#languageSelect").dispatchEvent(
 );
 if (!$('[data-i18n="heroLine1"]').textContent.includes("आपका"))
   throw new Error("Language switch failed");
-$("#languageSelect").value = "as";
-$("#languageSelect").dispatchEvent(
-  new window.Event("change", { bubbles: true }),
-);
-if ($('[data-i18n="heroLine1"]').textContent.trim() !== "Your question.")
-  throw new Error("Untranslated-language English fallback failed");
+const scheduledLanguages = [
+  "hi",
+  "bn",
+  "ta",
+  "te",
+  "mr",
+  "gu",
+  "kn",
+  "ml",
+  "pa",
+  "ur",
+  "or",
+  "as",
+  "sa",
+  "ks",
+  "ne",
+  "sd",
+  "kok",
+  "mni",
+  "brx",
+  "doi",
+  "sat",
+];
+for (const lang of scheduledLanguages) {
+  $("#languageSelect").value = lang;
+  $("#languageSelect").dispatchEvent(
+    new window.Event("change", { bubbles: true }),
+  );
+  const hero = $('[data-i18n="heroLine1"]').textContent.trim();
+  const start = $('[data-i18n="start"]').textContent.trim();
+  const track = $('[data-i18n="track"]').textContent.trim();
+  if (
+    window.document.documentElement.lang !== lang ||
+    hero === "Your question." ||
+    start === "File an RTI request" ||
+    track === "Track request"
+  ) {
+    throw new Error(`Essential translation coverage failed for ${lang}`);
+  }
+}
+for (const rtl of ["ur", "ks", "sd"]) {
+  $("#languageSelect").value = rtl;
+  $("#languageSelect").dispatchEvent(
+    new window.Event("change", { bubbles: true }),
+  );
+  if (window.document.documentElement.dir !== "rtl")
+    throw new Error(`RTL direction failed for ${rtl}`);
+}
 if ($("#liteToggle")) throw new Error("Manual Lite control should not exist");
 
 console.log(
-  "Smoke test passed: language onboarding, routing warning, four-step form, drafting guide, review, confirmation, and automatic low-data architecture.",
+  "Smoke test passed: all 22 language essentials, RTL direction, onboarding, routing, four-step form, review, confirmation, and automatic low-data architecture.",
 );

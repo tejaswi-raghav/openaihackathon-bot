@@ -1,4 +1,4 @@
-const CACHE = "rti-saathi-v2";
+const CACHE = "rti-saathi-v3";
 const ASSETS = [
   "/",
   "/index.html",

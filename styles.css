@@ -1,14 +1,15 @@
 :root {
-  --ink: #18352f;
-  --muted: #60716b;
-  --paper: #f7f4ec;
-  --paper-2: #eee9dc;
-  --white: #fffef9;
-  --green: #1e5a47;
-  --green-dark: #123f33;
-  --saffron: #e98232;
-  --line: #d8d4c8;
-  --shadow: 0 24px 70px rgba(25, 54, 47, 0.14);
+  --ink: #0b2d4d;
+  --muted: #5d6b78;
+  --paper: #f8fafc;
+  --paper-2: #eef3f6;
+  --white: #ffffff;
+  --green: #138808;
+  --green-dark: #075f37;
+  --saffron: #ff8c24;
+  --chakra: #1a4d8f;
+  --line: #d9e1e7;
+  --shadow: 0 22px 60px rgba(11, 45, 77, 0.12);
   font-family: "Noto Sans", "Segoe UI", Arial, sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -1852,5 +1853,315 @@ footer a {
   .trust-strip > div {
     border-right: 0;
     border-bottom: 1px solid var(--line);
+  }
+}
+
+/* Indian civic identity: restrained tricolor + Ashoka navy */
+body {
+  background: #fff;
+}
+.topline {
+  height: 7px;
+  grid-template-columns: 1fr 0.18fr 1fr;
+}
+.topline i:nth-child(1) {
+  background: #ff8c24;
+}
+.topline i:nth-child(2) {
+  background: #fff;
+}
+.topline i:nth-child(3) {
+  background: #138808;
+}
+.site-header {
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom-color: #dce4ea;
+  box-shadow: 0 4px 18px rgba(11, 45, 77, 0.05);
+}
+.header-prototype {
+  color: var(--chakra);
+  border-color: rgba(26, 77, 143, 0.38);
+  background: #f4f8fd;
+}
+.language-control {
+  border-color: #b9c9d8;
+  color: var(--chakra);
+}
+.language-gate {
+  background:
+    linear-gradient(
+      90deg,
+      #ff8c24 0 7px,
+      transparent 7px calc(100% - 7px),
+      #138808 calc(100% - 7px)
+    ),
+    #fff;
+}
+.language-gate::before {
+  content: "";
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  right: -150px;
+  top: 80px;
+  border: 2px solid rgba(26, 77, 143, 0.055);
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(26, 77, 143, 0.045) 0 1deg,
+    transparent 1deg 15deg
+  );
+  -webkit-mask: radial-gradient(
+    circle,
+    transparent 0 17%,
+    #000 17.5% 18.5%,
+    transparent 19% 72%,
+    #000 72.5% 73.5%,
+    transparent 74%
+  );
+  mask: radial-gradient(
+    circle,
+    transparent 0 17%,
+    #000 17.5% 18.5%,
+    transparent 19% 72%,
+    #000 72.5% 73.5%,
+    transparent 74%
+  );
+  pointer-events: none;
+}
+.language-gate__panel {
+  position: relative;
+  z-index: 1;
+}
+.language-gate__identity {
+  border-bottom-color: #dce4ea;
+}
+.language-gate__step {
+  color: #c66408;
+}
+.language-gate h1 {
+  color: var(--chakra);
+}
+.hear-button {
+  color: var(--chakra);
+  border-color: #b9c9d8;
+  background: #fff;
+}
+.language-grid button {
+  border-color: #d4dee7;
+  border-left: 4px solid transparent;
+  box-shadow: 0 3px 10px rgba(11, 45, 77, 0.035);
+}
+.language-grid button:nth-child(3n + 1) {
+  border-left-color: rgba(255, 140, 36, 0.68);
+}
+.language-grid button:nth-child(3n + 2) {
+  border-left-color: rgba(26, 77, 143, 0.6);
+}
+.language-grid button:nth-child(3n) {
+  border-left-color: rgba(19, 136, 8, 0.58);
+}
+.language-grid button:hover,
+.language-grid button:focus-visible {
+  border-color: var(--chakra);
+  background: #f3f7fb;
+  outline-color: rgba(26, 77, 143, 0.16);
+}
+.hero {
+  background:
+    linear-gradient(180deg, rgba(255, 140, 36, 0.035), transparent 24%), #fff;
+}
+.hero:before {
+  background-image:
+    linear-gradient(rgba(26, 77, 143, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 77, 143, 0.035) 1px, transparent 1px);
+  opacity: 0.45;
+}
+.hero:after {
+  content: "";
+  position: absolute;
+  width: min(43vw, 580px);
+  height: min(43vw, 580px);
+  right: 4vw;
+  top: 50%;
+  transform: translateY(-50%) rotate(-7.5deg);
+  border: 2px solid rgba(26, 77, 143, 0.06);
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(26, 77, 143, 0.05) 0 1deg,
+    transparent 1deg 15deg
+  );
+  -webkit-mask: radial-gradient(
+    circle,
+    transparent 0 17%,
+    #000 17.5% 18.5%,
+    transparent 19% 74%,
+    #000 74.5% 75.5%,
+    transparent 76%
+  );
+  mask: radial-gradient(
+    circle,
+    transparent 0 17%,
+    #000 17.5% 18.5%,
+    transparent 19% 74%,
+    #000 74.5% 75.5%,
+    transparent 76%
+  );
+  pointer-events: none;
+}
+.hero-copy,
+.citizen-visual {
+  z-index: 2;
+}
+.eyebrow {
+  color: var(--chakra);
+}
+.pulse {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--chakra);
+  background: repeating-conic-gradient(
+    var(--chakra) 0 2deg,
+    transparent 2deg 15deg
+  );
+  box-shadow: none;
+}
+h1,
+.guide-card h2,
+.section-heading h2,
+.examples-copy h2,
+.cta-section h2 {
+  color: var(--ink);
+}
+h1 em {
+  color: var(--green-dark);
+}
+h1 em:after {
+  background: var(--saffron);
+  height: 6px;
+}
+.hero-intro {
+  color: #455b6e;
+}
+.citizen-action--primary {
+  background: var(--chakra);
+  border-color: var(--chakra);
+}
+.citizen-action--primary .citizen-action__icon {
+  background: var(--saffron);
+}
+.citizen-action:hover,
+.citizen-action:focus-visible {
+  border-color: var(--chakra);
+  box-shadow: 0 8px 25px rgba(26, 77, 143, 0.11);
+}
+.citizen-visual__frame {
+  border-radius: 24px;
+  border: 1px solid #cdd9e2;
+  box-shadow: 0 22px 55px rgba(11, 45, 77, 0.15);
+}
+.citizen-visual__frame::before,
+.citizen-visual__frame::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  height: 6px;
+}
+.citizen-visual__frame::before {
+  top: 0;
+  background: #ff8c24;
+}
+.citizen-visual__frame::after {
+  bottom: 0;
+  background: #138808;
+}
+.prototype-ribbon {
+  background: rgba(11, 45, 77, 0.92);
+}
+.fact-card--fee {
+  background: var(--chakra);
+}
+.fact-card--reply {
+  background: var(--saffron);
+}
+.official-source {
+  border-color: #cdd9e2;
+  box-shadow: 0 8px 22px rgba(11, 45, 77, 0.14);
+}
+.trust-strip {
+  background: #fff;
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, #ff8c24 0 33%, #fff 33% 66%, #138808 66%)
+    1;
+}
+.trust-strip > div > span {
+  color: var(--chakra);
+}
+.how-section {
+  background: #f8fafc;
+}
+.steps-grid article {
+  background: #fff;
+}
+.step-icon {
+  color: var(--chakra);
+  background: #eef4fa;
+}
+.examples-section {
+  position: relative;
+  background: var(--ink);
+  border-top: 8px solid var(--saffron);
+  border-bottom: 8px solid var(--green);
+}
+.examples-section h2,
+.examples-section .question-stack p {
+  color: #fff;
+}
+.cta-section {
+  color: var(--ink);
+  background: #f7a24e;
+  border-left: 8px solid var(--chakra);
+  border-right: 8px solid var(--green);
+}
+footer {
+  background: #fff;
+}
+@media (max-width: 560px) {
+  .language-gate {
+    background:
+      linear-gradient(
+        90deg,
+        #ff8c24 0 5px,
+        transparent 5px calc(100% - 5px),
+        #138808 calc(100% - 5px)
+      ),
+      #fff;
+  }
+  .language-gate::before {
+    width: 260px;
+    height: 260px;
+    right: -115px;
+    top: 120px;
+  }
+  .hero {
+    background: #fff;
+  }
+  .hero:after {
+    display: none;
+  }
+  .hero h1 {
+    color: var(--ink);
+  }
+  .citizen-action--primary {
+    background: var(--chakra);
+  }
+  .citizen-visual__frame {
+    border-radius: 18px;
+  }
+  .header-prototype {
+    background: #fff;
   }
 }

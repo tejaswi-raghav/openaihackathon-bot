@@ -7,7 +7,7 @@ A citizen-first, low-bandwidth reimagining of India's Right to Information journ
 - Start with the citizen's task: ask, track, or appeal.
 - Route Central vs State requests before payment to prevent avoidable returns.
 - Work on low-end devices and unstable networks with no images, no web fonts, an offline shell, and local draft saving.
-- Provide a language-first interface covering all 22 scheduled Indian languages in the selector, with core human-written translations for major languages and a clearly progressive translation layer.
+- Provide a language-first interface with native-script filing, tracking and appeal essentials across all 22 scheduled Indian languages, plus a complete Hindi journey.
 - Meet accessible interaction basics: semantic HTML, keyboard operation, visible focus, reduced-motion and high-contrast support.
 
 ## Important
