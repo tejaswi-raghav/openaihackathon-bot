@@ -1,7 +1,9 @@
-const CACHE = "rti-saathi-v3";
+const CACHE = "rti-saathi-v4";
 const ASSETS = [
   "/",
   "/index.html",
+  "/styles.css",
+  "/app.js",
   "/manifest.json",
   "/assets/rti-official.gif",
   "/assets/indian-emblem-official.webp",
@@ -29,6 +31,7 @@ self.addEventListener("activate", (e) =>
 );
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  if (new URL(e.request.url).pathname.startsWith("/api/")) return;
   e.respondWith(
     fetch(e.request)
       .then((r) => {

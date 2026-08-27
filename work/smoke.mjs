@@ -42,6 +42,13 @@ $("#question").dispatchEvent(new window.Event("input", { bubbles: true }));
 click("#promptButton");
 if ($("#promptResult").hidden)
   throw new Error("Writing guidance did not appear");
+await Promise.resolve();
+await Promise.resolve();
+if (
+  $("#qualityMeter").hidden ||
+  !$("#qualityScore").textContent.includes("/100")
+)
+  throw new Error("Request quality feedback did not appear");
 click("#nextButton");
 if ($("#reviewList").children.length !== 4)
   throw new Error("Review summary is incomplete");
@@ -54,6 +61,19 @@ if (
   !$("#demoReference").textContent.startsWith("RTI-DEMO-")
 )
   throw new Error("Demo completion failed");
+if (!window.localStorage.getItem("rti-saathi-cases"))
+  throw new Error("On-device case history was not saved");
+click('[data-action="cases"]');
+if (
+  $("#casesModal").hidden ||
+  !$("#caseList").textContent.includes("RTI-DEMO-")
+)
+  throw new Error("Case workspace did not render");
+click('[data-action="close-cases"]');
+click('[data-action="state-directory"]');
+if ($("#stateModal").hidden || $("#stateSelect").options.length < 30)
+  throw new Error("State directory did not open");
+click('[data-action="close-state"]');
 
 $("#languageSelect").value = "hi";
 $("#languageSelect").dispatchEvent(

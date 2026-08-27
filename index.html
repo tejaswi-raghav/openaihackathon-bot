@@ -140,6 +140,9 @@
       <nav class="desktop-nav" aria-label="Primary navigation">
         <a href="#how" data-i18n="navHow">How it works</a>
         <a href="#examples" data-i18n="navAsk">What can I ask?</a>
+        <button type="button" class="text-button" data-action="cases">
+          My requests
+        </button>
         <button
           type="button"
           class="text-button"
@@ -192,6 +195,9 @@
       <div class="mobile-menu" id="mobileMenu" hidden>
         <a href="#how" data-i18n="navHow">How it works</a
         ><a href="#examples" data-i18n="navAsk">What can I ask?</a>
+        <button type="button" class="text-button" data-action="cases">
+          My requests
+        </button>
         <button
           type="button"
           class="text-button"
@@ -432,6 +438,31 @@
         </div>
       </section>
 
+      <section class="citizen-workspace" id="workspace" aria-labelledby="workspaceTitle">
+        <div class="workspace-heading">
+          <span class="section-label" data-i18n="workspaceLabel">YOUR PRIVATE WORKSPACE</span>
+          <h2 id="workspaceTitle" data-i18n="workspaceTitle">One place to prepare, save and follow up.</h2>
+          <p data-i18n="workspaceBody">
+            No account and no government credentials. Drafts and demo cases stay
+            only on this device until you choose the official portal.
+          </p>
+        </div>
+        <div class="workspace-grid">
+          <button type="button" class="workspace-card workspace-card--primary" data-action="start">
+            <span>01</span><b data-i18n="start">Prepare a clear RTI</b><small data-i18n="prepareBody">Get authority suggestions and a request-quality check.</small><i><span data-i18n="continue">Start</span> →</i>
+          </button>
+          <button type="button" class="workspace-card" data-action="cases">
+            <span>02</span><b data-i18n="track">My saved requests</b><small data-i18n="casesBody">See local drafts, dates and next actions on this phone.</small><i>Open →</i>
+          </button>
+          <button type="button" class="workspace-card" data-action="state-directory">
+            <span>03</span><b data-i18n="findState">Find my State portal</b><small data-i18n="stateCardBody">Avoid sending a State or local RTI to the Central portal.</small><i>Find →</i>
+          </button>
+        </div>
+        <div class="system-status" id="systemStatus" role="status">
+          <i aria-hidden="true"></i><span>Checking secure helper services…</span>
+        </div>
+      </section>
+
       <section class="cta-section">
         <div>
           <span class="section-label" data-i18n="readyLabel"
@@ -568,7 +599,18 @@
               name="authority"
               maxlength="100"
               placeholder="e.g. Indian Railways, Pune division"
+              autocomplete="off"
+              aria-describedby="authorityHelp"
             />
+            <p class="field-help" id="authorityHelp">
+              Type a service or department. Suggestions come from our helper directory.
+            </p>
+            <div
+              class="authority-results"
+              id="authorityResults"
+              aria-live="polite"
+              hidden
+            ></div>
             <div class="tip-box">
               <span aria-hidden="true">i</span>
               <p data-i18n="routeTip">
@@ -596,6 +638,14 @@
               ><span><b id="charCount">0</b>/3000</span>
             </div>
             <div class="prompt-result" id="promptResult" hidden></div>
+            <div class="quality-meter" id="qualityMeter" hidden aria-live="polite">
+              <div>
+                <b id="qualityLabel">Request clarity</b
+                ><strong id="qualityScore">0/100</strong>
+              </div>
+              <div class="quality-bar"><i id="qualityFill"></i></div>
+              <ul id="qualityTips"></ul>
+            </div>
             <label class="upload-label"
               ><input
                 type="file"
@@ -649,6 +699,13 @@
               data-i18n="findState"
               >Find my State portal ↗</a
             >
+            <button
+              type="button"
+              class="inline-button state-directory-button"
+              data-action="state-directory"
+            >
+              Choose a State here →
+            </button>
           </div>
           <footer class="form-footer">
             <button type="button" class="back-button" id="backButton" hidden>
@@ -686,6 +743,9 @@
                 >Continue to official portal</span
               >
               ↗</a
+            ><button type="button" class="secondary-button" id="downloadPack">
+              Download filing pack ↓
+            </button
             ><button
               type="button"
               class="secondary-button"
@@ -751,6 +811,59 @@
             prototype.</span
           >
         </p>
+      </section>
+    </div>
+
+    <div class="modal" id="casesModal" hidden>
+      <div class="modal-backdrop" data-action="close-cases"></div>
+      <section
+        class="modal-panel cases-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="casesTitle"
+      >
+        <header>
+          <div>
+            <span class="modal-kicker">ON THIS DEVICE</span>
+            <h2 id="casesTitle" data-i18n="casesTitle">My RTI workspace</h2>
+          </div>
+          <button type="button" class="close-button" data-action="close-cases" aria-label="Close">×</button>
+        </header>
+        <div class="cases-privacy">🔒 <span data-i18n="casesPrivacy">Saved locally. RTI Saathi does not upload this case history.</span></div>
+        <div id="caseList" class="case-list"></div>
+        <button type="button" class="secondary-button" id="clearCases">Clear demo history</button>
+      </section>
+    </div>
+
+    <div class="modal" id="stateModal" hidden>
+      <div class="modal-backdrop" data-action="close-state"></div>
+      <section
+        class="modal-panel small-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="stateTitle"
+      >
+        <header>
+          <div>
+            <span class="modal-kicker">CORRECT ROUTE</span>
+            <h2 id="stateTitle" data-i18n="stateTitle">Find your State RTI portal</h2>
+          </div>
+          <button type="button" class="close-button" data-action="close-state" aria-label="Close">×</button>
+        </header>
+        <p data-i18n="stateModalBody">Select where the authority is located. We will take you to the official DoPT State RTI directory.</p>
+        <label class="field-label" for="stateSelect" data-i18n="stateSelectLabel">State or Union Territory</label>
+        <select id="stateSelect" class="large-input">
+          <option value="">Choose your State / UT</option>
+        </select>
+        <div class="state-result" id="stateResult" hidden></div>
+        <a
+          class="next-button full-button"
+          id="stateOfficialLink"
+          href="https://rti.dopt.gov.in/rtistatelink.php"
+          target="_blank"
+          rel="noopener"
+          >Open official State directory ↗</a
+        >
       </section>
     </div>
 

@@ -108,6 +108,19 @@ const translations = {
     privacy: "यह प्रोटोटाइप आपका नंबर सहेजता या भेजता नहीं।",
     offlineNow: "आप ऑफलाइन हैं",
     offlineNowSub: "लिखते रहें। आपका ड्राफ्ट सुरक्षित है।",
+    workspaceLabel: "आपका निजी कार्यक्षेत्र",
+    workspaceTitle: "तैयारी, बचत और अगला कदम—एक ही जगह।",
+    workspaceBody:
+      "कोई खाता या सरकारी पहचान नहीं। आधिकारिक पोर्टल चुनने तक ड्राफ्ट और डेमो आवेदन केवल इसी डिवाइस पर रहते हैं।",
+    prepareBody: "सही प्राधिकरण का सुझाव और आवेदन की स्पष्टता जाँचें।",
+    casesBody: "इस फ़ोन पर सहेजे ड्राफ्ट, तारीख और अगला कदम देखें।",
+    stateCardBody: "राज्य या स्थानीय RTI को गलती से केंद्रीय पोर्टल पर भेजने से बचें।",
+    casesTitle: "मेरा RTI कार्यक्षेत्र",
+    casesPrivacy: "स्थानीय रूप से सहेजा गया। RTI Saathi यह इतिहास अपलोड नहीं करता।",
+    stateTitle: "अपना राज्य RTI पोर्टल खोजें",
+    stateModalBody:
+      "प्राधिकरण का राज्य चुनें। हम आपको आधिकारिक DoPT राज्य RTI निर्देशिका तक ले जाएंगे।",
+    stateSelectLabel: "राज्य या केंद्र शासित प्रदेश",
   },
   bn: {
     heroLine1: "আপনার প্রশ্ন।",
@@ -466,7 +479,22 @@ let currentStep = 1,
   lastFocus = null;
 const requestModal = $("#requestModal"),
   trackModal = $("#trackModal"),
+  casesModal = $("#casesModal"),
+  stateModal = $("#stateModal"),
   form = $("#requestForm");
+const stateNames = [
+  "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh",
+  "Chhattisgarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa", "Gujarat", "Haryana",
+  "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Lakshadweep",
+  "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Puducherry",
+  "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+];
+const localAuthorities = [
+  "Ministry of Railways", "Ministry of Education", "Ministry of Health and Family Welfare",
+  "Ministry of Rural Development", "Department of Posts", "Employees' Provident Fund Organisation",
+  "Ministry of Agriculture and Farmers Welfare", "Unique Identification Authority of India",
+  "Election Commission of India", "Central Information Commission",
+];
 function applyLanguage(lang) {
   const dict = translations[lang] || translations.en;
   document.documentElement.lang = lang;
@@ -557,6 +585,94 @@ function buildReview() {
     )
     .join("");
 }
+function safeText(value) {
+  return String(value || "").replace(/[<>]/g, "");
+}
+function readCases() {
+  try {
+    return JSON.parse(localStorage.getItem("rti-saathi-cases")) || [];
+  } catch {
+    return [];
+  }
+}
+function saveCase(reference) {
+  const fd = new FormData(form);
+  const cases = readCases();
+  cases.unshift({
+    reference,
+    createdAt: new Date().toISOString(),
+    topic: safeText(fd.get("topic")),
+    authority: safeText(fd.get("authority")) || "Authority not selected",
+    question: safeText(fd.get("question")).slice(0, 3000),
+    status: "Draft prepared",
+  });
+  localStorage.setItem("rti-saathi-cases", JSON.stringify(cases.slice(0, 20)));
+}
+function renderCases() {
+  const cases = readCases();
+  $("#caseList").innerHTML = cases.length
+    ? cases.map((item) => `<article class="case-item"><div><span>${safeText(item.status)}</span><time>${new Date(item.createdAt).toLocaleDateString()}</time></div><strong>${safeText(item.reference)}</strong><b>${safeText(item.topic)}</b><p>${safeText(item.question)}</p><small>${safeText(item.authority)}</small></article>`).join("")
+    : '<div class="empty-state"><span>⌁</span><b>No saved requests yet</b><p>Prepare an RTI and it will appear here on this device.</p></div>';
+  $("#clearCases").hidden = cases.length === 0;
+}
+function localAnalysis(text) {
+  let score = 25;
+  const tips = [];
+  if (text.length >= 80) score += 15; else tips.push("Add enough detail to identify the record you need.");
+  if (/\b(19|20)\d{2}\b|\b(from|between|dated|period|month|year)\b/i.test(text)) score += 20; else tips.push("Add a date or date range.");
+  if (/\b(copy|copies|record|register|report|order|file|minutes|list|status|amount|sanctioned|spent)\b/i.test(text)) score += 20; else tips.push("Ask for an existing record, report, list, order or status.");
+  if (/\b(why|opinion|explain|justify)\b/i.test(text)) { score -= 15; tips.push("Replace opinion questions with a request for records or action taken."); } else score += 10;
+  if (/\b(village|district|office|division|department|scheme|complaint|application)\b/i.test(text)) score += 10; else tips.push("Name the place, office, scheme or application involved.");
+  score = Math.max(0, Math.min(100, score));
+  if (tips.length === 0)
+    tips.push("Clear and record-focused. Review names, dates and spellings before filing.");
+  return { score, grade: score >= 80 ? "Ready to review" : score >= 55 ? "Almost clear" : "Needs detail", tips: tips.slice(0, 4) };
+}
+function showAnalysis(result) {
+  $("#qualityMeter").hidden = false;
+  $("#qualityLabel").textContent = result.grade;
+  $("#qualityScore").textContent = `${result.score}/100`;
+  $("#qualityFill").style.width = `${result.score}%`;
+  $("#qualityTips").innerHTML = result.tips.map((tip) => `<li>${safeText(tip)}</li>`).join("");
+}
+async function analyzeDraft(text) {
+  const fallback = localAnalysis(text);
+  if (!window.fetch || !navigator.onLine) return fallback;
+  try {
+    const response = await fetch("/api/analyze", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
+    return response.ok ? await response.json() : fallback;
+  } catch {
+    return fallback;
+  }
+}
+async function findAuthorities(query) {
+  const level = $('[name="level"]:checked')?.value || "central";
+  if (level === "state") return [];
+  if (window.fetch && navigator.onLine) {
+    try {
+      const response = await fetch(`/api/authorities?q=${encodeURIComponent(query)}&level=central`);
+      if (response.ok) return (await response.json()).matches;
+    } catch {}
+  }
+  const lower = query.toLowerCase();
+  return localAuthorities.filter((name) => name.toLowerCase().includes(lower)).slice(0, 6).map((name) => ({ name }));
+}
+function renderAuthorities(matches) {
+  const box = $("#authorityResults");
+  box.hidden = matches.length === 0;
+  box.innerHTML = matches.map((item) => `<button type="button" data-authority="${safeText(item.name)}"><b>${safeText(item.name)}</b><small>Central public authority suggestion</small></button>`).join("");
+}
+function downloadFilingPack() {
+  const latest = readCases()[0];
+  if (!latest) return;
+  const content = `RTI SAATHI — FILING PREPARATION PACK\nIndependent hackathon prototype — not proof of government submission\n\nDemo reference: ${latest.reference}\nPrepared: ${new Date(latest.createdAt).toLocaleString()}\nTopic: ${latest.topic}\nSuggested authority: ${latest.authority}\n\nINFORMATION REQUESTED\n${latest.question}\n\nNEXT STEPS\n1. Confirm whether this is a Central or State authority.\n2. Copy this request into the correct official portal.\n3. Save the official government registration number separately.\n\nCentral portal: https://rtionline.gov.in/\nState directory: https://rti.dopt.gov.in/rtistatelink.php\n`;
+  const url = URL.createObjectURL(new Blob([content], { type: "text/plain;charset=utf-8" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${latest.reference}-filing-pack.txt`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
 $$('[data-action="start"]').forEach((b) =>
   b.addEventListener("click", () => {
     updateStep(1);
@@ -566,12 +682,20 @@ $$('[data-action="start"]').forEach((b) =>
 $$('[data-action="track"]').forEach((b) =>
   b.addEventListener("click", () => openModal(trackModal)),
 );
+$$('[data-action="cases"]').forEach((b) =>
+  b.addEventListener("click", () => { renderCases(); openModal(casesModal); }),
+);
+$$('[data-action="state-directory"]').forEach((b) =>
+  b.addEventListener("click", () => openModal(stateModal)),
+);
 $$('[data-action="close-modal"]').forEach((b) =>
   b.addEventListener("click", () => closeModal(requestModal)),
 );
 $$('[data-action="close-track"]').forEach((b) =>
   b.addEventListener("click", () => closeModal(trackModal)),
 );
+$$('[data-action="close-cases"]').forEach((b) => b.addEventListener("click", () => closeModal(casesModal)));
+$$('[data-action="close-state"]').forEach((b) => b.addEventListener("click", () => closeModal(stateModal)));
 $("#nextButton").addEventListener("click", () => {
   if (!validateStep()) return;
   const level = $('[name="level"]:checked')?.value;
@@ -601,15 +725,39 @@ form.addEventListener("submit", (e) => {
   $("#successState").hidden = false;
   $("#demoReference").textContent =
     `RTI-DEMO-${new Date().getFullYear()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+  saveCase($("#demoReference").textContent);
   localStorage.removeItem("rti-saathi-draft");
 });
-$("#promptButton").addEventListener("click", () => {
+$("#promptButton").addEventListener("click", async () => {
   const text = $("#question").value.trim();
   const box = $("#promptResult");
   box.hidden = false;
-  box.textContent = text
-    ? `Tip: Add a date range and ask for “certified copies of records” where useful. Keep each request focused on one subject.`
-    : `Start with: “Please provide a certified copy of…” Then add the place, date range, and specific record you need.`;
+  box.textContent = text ? "Checking clarity…" : "Start with: “Please provide a certified copy of…” Then add the place, date range, and specific record you need.";
+  if (text) {
+    const result = await analyzeDraft(text);
+    box.textContent = `${result.grade}: ${result.tips[0]}`;
+    showAnalysis(result);
+  }
+});
+$("#authority").addEventListener("input", (event) => {
+  clearTimeout(window._authorityTimer);
+  const query = event.target.value.trim();
+  if (query.length < 2) return renderAuthorities([]);
+  window._authorityTimer = setTimeout(async () => renderAuthorities(await findAuthorities(query)), 220);
+});
+$("#authorityResults").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-authority]");
+  if (!button) return;
+  $("#authority").value = button.dataset.authority;
+  renderAuthorities([]);
+  saveDraft();
+});
+$("#downloadPack").addEventListener("click", downloadFilingPack);
+$("#clearCases").addEventListener("click", () => { localStorage.removeItem("rti-saathi-cases"); renderCases(); });
+$("#stateSelect").innerHTML += stateNames.map((name) => `<option value="${name}">${name}</option>`).join("");
+$("#stateSelect").addEventListener("change", (event) => {
+  $("#stateResult").hidden = !event.target.value;
+  $("#stateResult").innerHTML = event.target.value ? `<b>${safeText(event.target.value)}</b><p>Use the official DoPT directory to open the current portal for this State or Union Territory.</p>` : "";
 });
 $("#supportingFile").addEventListener("change", (e) => {
   const f = e.target.files[0];
@@ -659,6 +807,8 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     if (!requestModal.hidden) closeModal(requestModal);
     if (!trackModal.hidden) closeModal(trackModal);
+    if (!casesModal.hidden) closeModal(casesModal);
+    if (!stateModal.hidden) closeModal(stateModal);
   }
 });
 function networkState() {
@@ -669,6 +819,14 @@ function networkState() {
 addEventListener("online", networkState);
 addEventListener("offline", networkState);
 networkState();
+if (window.fetch) {
+  fetch("/api/health")
+    .then((response) => response.ok ? response.json() : Promise.reject())
+    .then(() => { $("#systemStatus").classList.add("is-ready"); $("#systemStatus span").textContent = "Helper services ready · requests are not stored"; })
+    .catch(() => { $("#systemStatus span").textContent = "Offline helper ready · core drafting still works"; });
+} else {
+  $("#systemStatus span").textContent = "Offline helper ready · core drafting still works";
+}
 const savedLang = localStorage.getItem("rti-language") || "en";
 $("#languageSelect").value = savedLang;
 applyLanguage(savedLang);
