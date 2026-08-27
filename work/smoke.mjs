@@ -129,6 +129,10 @@ for (const rtl of ["ur", "ks", "sd"]) {
   if (window.document.documentElement.dir !== "rtl")
     throw new Error(`RTL direction failed for ${rtl}`);
 }
+$("#languageSelect").value = "en";
+$("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
+if ($('[data-action="track"] [data-i18n="track"]').textContent.trim() !== "Track request")
+  throw new Error("English tracking action was overridden by workspace copy");
 if ($("#liteToggle")) throw new Error("Manual Lite control should not exist");
 
 console.log(
