@@ -627,6 +627,43 @@ h1 em:after {
 .examples-section {
   padding: clamp(4rem, 8vw, 8rem) clamp(1.25rem, 7vw, 7.5rem);
 }
+.life-events-section {
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 7vw, 7.5rem) 0;
+}
+.life-events-section p {
+  color: var(--muted);
+  max-width: 44rem;
+  margin: 0.6rem 0 0;
+}
+.life-event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.7rem;
+  margin-top: 1.8rem;
+}
+.life-event-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: border-color 0.12s, transform 0.12s, box-shadow 0.12s;
+}
+.life-event-chip span:first-child {
+  font-size: 1.1rem;
+}
+.life-event-chip:hover,
+.life-event-chip:focus-visible {
+  border-color: var(--chakra);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
 .section-heading {
   display: flex;
   gap: 1.5rem;
@@ -1198,6 +1235,69 @@ footer a {
   justify-content: center;
   gap: 0.8rem;
 }
+.feedback-loop {
+  margin-top: 1.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+.feedback-question {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 0.7rem;
+}
+.feedback-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+.feedback-buttons button {
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.12s;
+}
+.feedback-buttons button:hover {
+  border-color: var(--chakra);
+}
+.feedback-followup p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 1rem 0 0.6rem;
+}
+.feedback-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.feedback-options button {
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.78rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.12s;
+}
+.feedback-options button:hover {
+  border-color: var(--chakra);
+}
+.feedback-thanks {
+  font-size: 0.82rem;
+  color: var(--green);
+  font-weight: 600;
+  margin: 1rem 0 0;
+}
 .small-panel {
   width: min(520px, 100%);
 }
@@ -1213,6 +1313,86 @@ footer a {
 .privacy-note {
   text-align: center;
   font-size: 0.67rem !important;
+}
+.status-tracker {
+  margin: 1rem 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+}
+.status-tracker .tracker-heading {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.2rem;
+}
+.status-tracker .tracker-ref {
+  font-family: ui-monospace, monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin: 0 0 0.9rem;
+}
+.tracker-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+.tracker-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.tracker-step .tracker-icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 1.5px solid var(--line);
+  color: var(--muted);
+}
+.tracker-step.is-done {
+  color: var(--ink);
+}
+.tracker-step.is-done .tracker-icon {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.tracker-step.is-current {
+  color: var(--ink);
+  font-weight: 600;
+}
+.tracker-step.is-current .tracker-icon {
+  background: var(--saffron);
+  border-color: var(--saffron);
+  color: #fff;
+}
+.tracker-next {
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.tracker-next b {
+  display: block;
+  color: var(--ink);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.tracker-error {
+  font-size: 0.78rem;
+  color: var(--muted);
 }
 .offline-toast {
   position: fixed;
@@ -1485,7 +1665,7 @@ footer a {
 }
 .workspace-grid {
   display: grid;
-  grid-template-columns: 1.12fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 1px;
   margin-top: 2.5rem;
   background: var(--line);
@@ -1609,6 +1789,35 @@ footer a {
 .empty-state p { color: var(--muted); font-size: 0.75rem; }
 .state-result { margin: 1rem 0; padding: 1rem; border-left: 4px solid var(--saffron); background: #fff7ed; }
 .state-result p { margin-bottom: 0; color: var(--muted); font-size: 0.75rem; line-height: 1.5; }
+.offline-help-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.offline-help-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.12s;
+}
+.offline-help-link b {
+  font-size: 0.92rem;
+}
+.offline-help-link small {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+.offline-help-link:hover,
+.offline-help-link:focus-visible {
+  border-color: var(--chakra);
+}
 .cases-panel { max-width: 720px; }
 @media (max-width: 760px) {
   .citizen-workspace { padding: 3.5rem 1rem; }
@@ -2717,6 +2926,48 @@ footer {
 .chat-send svg {
   width: 17px;
   height: 17px;
+}
+.chat-mic {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--dk-border);
+  background: var(--dk-panel-2);
+  color: var(--dk-muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+.chat-mic:hover {
+  color: var(--ai-2);
+  border-color: var(--dk-border-2);
+}
+.chat-mic.is-recording {
+  color: var(--ai-3);
+  border-color: var(--ai-3);
+}
+.chat-mic svg {
+  width: 16px;
+  height: 16px;
+}
+.chat-agent-link {
+  flex: none;
+  align-self: flex-start;
+  margin: 0 1.2rem 0.6rem;
+  border: none;
+  background: none;
+  color: var(--dk-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 0;
+}
+.chat-agent-link:hover {
+  color: var(--ai-2);
 }
 .chat-note {
   flex: none;

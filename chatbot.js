@@ -198,6 +198,8 @@ const chipsBox = $("#chatChips");
 const form = $("#chatForm");
 const input = $("#chatInput");
 const sendBtn = $("#chatSend");
+const micBtn = $("#chatMicButton");
+const agentBtn = $("#chatAgentButton");
 const kicker = $("#chatKicker");
 const title = $("#chatTitle");
 const intro = $("#chatIntro");
@@ -318,15 +320,15 @@ function scrollToEnd() {
   messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
-function appendMessage(role, text, viaFallback) {
+function appendMessage(role, text, tag) {
   const row = document.createElement("div");
   row.className = "chat-msg-row" + (role === "user" ? " is-user" : "");
 
-  if (role === "bot" && viaFallback) {
-    const tag = document.createElement("span");
-    tag.className = "chat-tag";
-    tag.textContent = strings().offline;
-    row.appendChild(tag);
+  if (role === "bot" && tag) {
+    const tagEl = document.createElement("span");
+    tagEl.className = "chat-tag";
+    tagEl.textContent = tag === true ? strings().offline : tag;
+    row.appendChild(tagEl);
   }
 
   const bubble = document.createElement("div");
@@ -543,6 +545,34 @@ input.addEventListener("keydown", (e) => {
     e.preventDefault();
     sendMessage(input.value);
   }
+});
+
+// ---------- connect with an agent (demo hand-off, no real human involved) ----------
+const AGENT_NAMES = ["Priya", "Arjun", "Meera", "Rohit", "Ananya"];
+agentBtn.addEventListener("click", () => {
+  const name = AGENT_NAMES[Math.floor(Math.random() * AGENT_NAMES.length)];
+  const reply = `I am ${name}, your Saathi. How can I help you?`;
+  appendMessage("bot", reply, "Connect with an agent \u00b7 Demo");
+  history.push({ role: "assistant", content: reply });
+});
+
+// ---------- voice message (demo placeholder, no real speech recognition yet) ----------
+const VOICE_REPLIES = [
+  "Thanks for the voice message. Voice understanding is a demo for now \u2014 could you type your question above?",
+  "Got your voice note. This feature is still a prototype, so please type it out and I'll answer right away.",
+  "I heard something, but I can't understand voice messages yet. Type your question and I'll help.",
+];
+micBtn.addEventListener("click", () => {
+  if (micBtn.classList.contains("is-recording")) return;
+  micBtn.classList.add("is-recording");
+  appendMessage("user", "\ud83c\udfa4 Voice message");
+  history.push({ role: "user", content: "(voice message)" });
+  setTimeout(() => {
+    micBtn.classList.remove("is-recording");
+    const reply = VOICE_REPLIES[Math.floor(Math.random() * VOICE_REPLIES.length)];
+    appendMessage("bot", reply, "Voice reply \u00b7 Demo");
+    history.push({ role: "assistant", content: reply });
+  }, 700);
 });
 
 applyChrome();

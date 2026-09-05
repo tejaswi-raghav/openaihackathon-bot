@@ -488,6 +488,7 @@ const requestModal = $("#requestModal"),
   trackModal = $("#trackModal"),
   casesModal = $("#casesModal"),
   stateModal = $("#stateModal"),
+  offlineHelpModal = $("#offlineHelpModal"),
   form = $("#requestForm");
 const stateNames = [
   "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh",
@@ -616,6 +617,85 @@ function saveCase(reference) {
   });
   localStorage.setItem("rti-saathi-cases", JSON.stringify(cases.slice(0, 20)));
 }
+function resetFeedbackLoop() {
+  $("#feedbackButtons").hidden = false;
+  $("#feedbackFollowup").hidden = true;
+  $("#feedbackThanks").hidden = true;
+}
+function logFeedback(entry) {
+  let log;
+  try { log = JSON.parse(localStorage.getItem("rti-saathi-feedback") || "[]"); } catch { log = []; }
+  log.unshift({ ts: new Date().toISOString(), ...entry });
+  try { localStorage.setItem("rti-saathi-feedback", JSON.stringify(log.slice(0, 50))); } catch {}
+}
+$("#feedbackButtons").addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-feedback]");
+  if (!btn) return;
+  const outcome = btn.dataset.feedback;
+  if (outcome === "yes") {
+    logFeedback({ outcome: "yes" });
+    $("#feedbackButtons").hidden = true;
+    $("#feedbackThanks").hidden = false;
+  } else {
+    $("#feedbackButtons").hidden = true;
+    $("#feedbackFollowup").hidden = false;
+  }
+});
+$("#feedbackFollowup").addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-reason]");
+  if (!btn) return;
+  const reason = btn.dataset.reason;
+  logFeedback({ outcome: "no", reason });
+  $("#feedbackFollowup").hidden = true;
+  $("#feedbackThanks").hidden = false;
+  if (reason === "human") {
+    closeModal(requestModal);
+    document.querySelector('[data-action="chat"]')?.click();
+  }
+});
+const DEMO_REF_PATTERN = /^RTI-DEMO-\d{4}-[A-Z0-9]{6}$/;
+function renderTracker(reference, data) {
+  const tracker = $("#statusTracker");
+  const steps = [
+    { label: "Request drafted on this device", done: true },
+    { label: "Demo reference generated", done: true },
+    { label: "Submitted to the official portal", current: !data.governmentSubmission },
+    { label: "Reply from the public authority (within 30 days)" },
+    { label: "First appeal, only if there is no reply" },
+  ];
+  tracker.innerHTML = `
+    <p class="tracker-heading">Your RTI draft</p>
+    <p class="tracker-ref">${safeText(reference)}</p>
+    <div class="tracker-steps">
+      ${steps.map((s) => `<div class="tracker-step ${s.done ? "is-done" : s.current ? "is-current" : ""}"><span class="tracker-icon" aria-hidden="true">${s.done ? "✓" : s.current ? "●" : "○"}</span><span>${s.label}</span></div>`).join("")}
+    </div>
+    <div class="tracker-next"><b>What happens next?</b>${safeText(data.nextAction)}</div>
+  `;
+  tracker.hidden = false;
+}
+$("#trackDemoButton").addEventListener("click", async () => {
+  const tracker = $("#statusTracker");
+  let reference = $("#trackingNumber").value.trim().toUpperCase();
+  if (!DEMO_REF_PATTERN.test(reference)) {
+    const lastCase = readCases()[0];
+    reference = lastCase ? lastCase.reference : "";
+  }
+  if (!DEMO_REF_PATTERN.test(reference)) {
+    tracker.innerHTML = `<p class="tracker-error">This looks at demo references this prototype generated (like RTI-DEMO-2026-ABC123), not real government numbers. File a request first, or paste your demo reference above.</p>`;
+    tracker.hidden = false;
+    return;
+  }
+  tracker.innerHTML = `<p class="tracker-error">Checking…</p>`;
+  tracker.hidden = false;
+  try {
+    const res = await fetch(`/api/demo-status?reference=${encodeURIComponent(reference)}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Could not check this reference.");
+    renderTracker(reference, data);
+  } catch (err) {
+    tracker.innerHTML = `<p class="tracker-error">${safeText(err.message || "Could not check this reference right now.")}</p>`;
+  }
+});
 function renderCases() {
   const cases = readCases();
   $("#caseList").innerHTML = cases.length
@@ -684,17 +764,27 @@ function downloadFilingPack() {
 $$('[data-action="start"]').forEach((b) =>
   b.addEventListener("click", () => {
     updateStep(1);
+    $("#requestForm").hidden = false;
+    $(".progress-wrap", requestModal).hidden = false;
+    $("#successState").hidden = true;
+    resetFeedbackLoop();
     openModal(requestModal);
   }),
 );
 $$('[data-action="track"]').forEach((b) =>
-  b.addEventListener("click", () => openModal(trackModal)),
+  b.addEventListener("click", () => {
+    $("#statusTracker").hidden = true;
+    openModal(trackModal);
+  }),
 );
 $$('[data-action="cases"]').forEach((b) =>
   b.addEventListener("click", () => { renderCases(); openModal(casesModal); }),
 );
 $$('[data-action="state-directory"]').forEach((b) =>
   b.addEventListener("click", () => openModal(stateModal)),
+);
+$$('[data-action="offline-help"]').forEach((b) =>
+  b.addEventListener("click", () => openModal(offlineHelpModal)),
 );
 $$('[data-action="close-modal"]').forEach((b) =>
   b.addEventListener("click", () => closeModal(requestModal)),
@@ -704,6 +794,7 @@ $$('[data-action="close-track"]').forEach((b) =>
 );
 $$('[data-action="close-cases"]').forEach((b) => b.addEventListener("click", () => closeModal(casesModal)));
 $$('[data-action="close-state"]').forEach((b) => b.addEventListener("click", () => closeModal(stateModal)));
+$$('[data-action="close-offline-help"]').forEach((b) => b.addEventListener("click", () => closeModal(offlineHelpModal)));
 $("#nextButton").addEventListener("click", () => {
   if (!validateStep()) return;
   const level = $('[name="level"]:checked')?.value;
@@ -731,6 +822,7 @@ form.addEventListener("submit", (e) => {
   $("#requestForm").hidden = true;
   $(".progress-wrap", requestModal).hidden = true;
   $("#successState").hidden = false;
+  resetFeedbackLoop();
   $("#demoReference").textContent =
     `RTI-DEMO-${new Date().getFullYear()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
   saveCase($("#demoReference").textContent);
@@ -817,6 +909,7 @@ document.addEventListener("keydown", (e) => {
     if (!trackModal.hidden) closeModal(trackModal);
     if (!casesModal.hidden) closeModal(casesModal);
     if (!stateModal.hidden) closeModal(stateModal);
+    if (!offlineHelpModal.hidden) closeModal(offlineHelpModal);
   }
 });
 function networkState() {

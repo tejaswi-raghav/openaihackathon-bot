@@ -408,6 +408,27 @@
         </div>
       </section>
 
+      <section class="life-events-section" id="lifeEvents" aria-labelledby="lifeEventsTitle">
+        <span class="section-label" data-i18n="lifeEventsLabel">WHAT'S GOING ON IN YOUR LIFE?</span>
+        <h2 id="lifeEventsTitle" data-i18n="lifeEventsTitle">Find RTI questions for your moment</h2>
+        <p data-i18n="lifeEventsBody">
+          Pick what's happening right now, and we'll take you straight to the
+          kind of RTI questions people in that situation often ask.
+        </p>
+        <div class="life-event-grid">
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">👶</span> <span data-i18n="lifeBaby">Having a baby</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🎓</span> <span data-i18n="lifeCollege">Starting college</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">💼</span> <span data-i18n="lifeJob">Starting a job</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🏠</span> <span data-i18n="lifeHome">Buying a home</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">💍</span> <span data-i18n="lifeMarriage">Getting married</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🚗</span> <span data-i18n="lifeVehicle">Getting a vehicle</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">✈️</span> <span data-i18n="lifeTravel">Travelling abroad</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🏢</span> <span data-i18n="lifeBusiness">Starting a business</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">👴</span> <span data-i18n="lifeRetiring">Retiring</span></a>
+          <a class="life-event-chip" href="#examples"><span aria-hidden="true">💔</span> <span data-i18n="lifeDeath">Dealing with a death in the family</span></a>
+        </div>
+      </section>
+
       <section class="examples-section" id="examples">
         <div class="examples-copy">
           <span class="section-label" data-i18n="askLabel"
@@ -470,6 +491,9 @@
           </button>
           <button type="button" class="workspace-card" data-action="state-directory">
             <span>03</span><b data-i18n="stateAction">Find my State portal</b><small data-i18n="stateCardBody">Avoid sending a State or local RTI to the Central portal.</small><i>Find →</i>
+          </button>
+          <button type="button" class="workspace-card" data-action="offline-help">
+            <span>04</span><b data-i18n="offlineHelpAction">Find offline help near you</b><small data-i18n="offlineHelpBody">Locate a PIO office, Common Service Centre, or post office.</small><i>Find →</i>
           </button>
         </div>
         <div class="system-status" id="systemStatus" role="status">
@@ -769,6 +793,24 @@
               Done
             </button>
           </div>
+          <div class="feedback-loop" id="feedbackLoop">
+            <p class="feedback-question" data-i18n="feedbackQuestion">Did you get what you needed?</p>
+            <div class="feedback-buttons" id="feedbackButtons">
+              <button type="button" data-feedback="yes"><span aria-hidden="true">👍</span> <span data-i18n="feedbackYes">Yes</span></button>
+              <button type="button" data-feedback="no"><span aria-hidden="true">👎</span> <span data-i18n="feedbackNo">No</span></button>
+            </div>
+            <div class="feedback-followup" id="feedbackFollowup" hidden>
+              <p data-i18n="feedbackWhatWrong">What went wrong?</p>
+              <div class="feedback-options">
+                <button type="button" data-reason="find" data-i18n="feedbackReasonFind">I couldn't find the service</button>
+                <button type="button" data-reason="understand" data-i18n="feedbackReasonUnderstand">I didn't understand the instructions</button>
+                <button type="button" data-reason="website" data-i18n="feedbackReasonWebsite">The website didn't work</button>
+                <button type="button" data-reason="complete" data-i18n="feedbackReasonComplete">I couldn't complete the application</button>
+                <button type="button" data-reason="human" data-i18n="feedbackReasonHuman">I need human assistance</button>
+              </div>
+            </div>
+            <p class="feedback-thanks" id="feedbackThanks" hidden data-i18n="feedbackThanks">Thank you — this helps us improve RTI Saathi.</p>
+          </div>
         </div>
       </section>
     </div>
@@ -811,7 +853,12 @@
           id="trackingNumber"
           class="large-input"
           placeholder="e.g. DOP&amp;T/R/E/26/00123"
-        /><a
+        />
+        <button type="button" class="secondary-button full-button" id="trackDemoButton" data-i18n="checkDemoStatus">
+          Check this device's demo reference
+        </button>
+        <div class="status-tracker" id="statusTracker" hidden></div>
+        <a
           class="next-button full-button"
           href="https://rtionline.gov.in/request/status.php"
           target="_blank"
@@ -881,6 +928,42 @@
       </section>
     </div>
 
+    <div class="modal" id="offlineHelpModal" hidden>
+      <div class="modal-backdrop" data-action="close-offline-help"></div>
+      <section
+        class="modal-panel small-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="offlineHelpTitle"
+      >
+        <header>
+          <div>
+            <span class="modal-kicker" data-i18n="offlineHelpKicker">OFFLINE HELP</span>
+            <h2 id="offlineHelpTitle" data-i18n="offlineHelpTitle">Find help in person</h2>
+          </div>
+          <button type="button" class="close-button" data-action="close-offline-help" aria-label="Close">×</button>
+        </header>
+        <p data-i18n="offlineHelpModalBody">
+          Prefer to go in person? These open a map search using your device's
+          own location — nothing here is sent to this site.
+        </p>
+        <div class="offline-help-list">
+          <a class="offline-help-link" href="https://www.google.com/maps/search/?api=1&amp;query=Public+Information+Officer+RTI+office+near+me" target="_blank" rel="noopener">
+            <b data-i18n="offlinePio">Public Information Officer (PIO) office</b>
+            <small data-i18n="offlinePioBody">Where RTI requests can be filed and asked about in person.</small>
+          </a>
+          <a class="offline-help-link" href="https://www.google.com/maps/search/?api=1&amp;query=Common+Service+Centre+CSC+near+me" target="_blank" rel="noopener">
+            <b data-i18n="offlineCsc">Common Service Centre (CSC)</b>
+            <small data-i18n="offlineCscBody">Government-run digital service points that help with online applications.</small>
+          </a>
+          <a class="offline-help-link" href="https://www.google.com/maps/search/?api=1&amp;query=post+office+near+me" target="_blank" rel="noopener">
+            <b data-i18n="offlinePost">Post office</b>
+            <small data-i18n="offlinePostBody">RTI requests and fees can also be sent by registered post.</small>
+          </a>
+        </div>
+      </section>
+    </div>
+
     <aside
       class="chat-sidebar"
       id="chatSidebar"
@@ -903,6 +986,9 @@
         I can explain how this site works — filing, fees, timelines, or finding the right authority.
       </p>
       <div class="chat-chips" id="chatChips"></div>
+      <button type="button" class="chat-agent-link" id="chatAgentButton">
+        <span aria-hidden="true">🧑</span> Connect with an agent
+      </button>
       <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
       <form class="chat-form" id="chatForm">
         <div class="chat-input-wrap">
@@ -913,6 +999,9 @@
             placeholder="Type a question…"
           ></textarea>
         </div>
+        <button type="button" class="chat-mic" id="chatMicButton" aria-label="Send a voice message (demo)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        </button>
         <button type="submit" class="chat-send" id="chatSend" aria-label="Send">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         </button>
