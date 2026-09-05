@@ -30,8 +30,20 @@ const SYSTEM_PROMPT = [
 ].join(" ");
 
 function buildSystemPrompt(lang) {
-  const languageName = LANG_NAMES[lang] || "English";
-  return `${SYSTEM_PROMPT} Reply only in ${languageName}, regardless of what language the visitor writes in, unless they explicitly ask for a different language.`;
+  if (lang === "en") {
+    return `${SYSTEM_PROMPT} Reply only in English.`;
+  }
+  if (lang === "hi") {
+    return `${SYSTEM_PROMPT} Reply only in Hindi (Devanagari script), regardless of what language the visitor writes in, unless they explicitly ask for a different language.`;
+  }
+  // For every other site language, reply bilingually rather than attempting
+  // that language directly: offline canned answers only cover a subset of
+  // these languages natively, and free-typed text can't be reliably matched
+  // in the rest, so English-then-Hindi is the one policy that reaches almost
+  // every visitor regardless of which of the 22 languages their interface
+  // is set to.
+  const languageName = LANG_NAMES[lang] || "the visitor's chosen language";
+  return `${SYSTEM_PROMPT} The visitor's interface is set to ${languageName}. Reply in English first, then on a new line repeat the same answer in Hindi (Devanagari script). Never attempt ${languageName} or any other language, and never give only one of the two parts, regardless of what language the visitor writes in.`;
 }
 
 // Gemini's generateContent expects {role, parts:[{text}]} turns, with "model"
