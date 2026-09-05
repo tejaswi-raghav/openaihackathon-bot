@@ -1,9 +1,10 @@
-const CACHE = "rti-saathi-v4";
+const CACHE = "rti-saathi-v5";
 const ASSETS = [
   "/",
   "/index.html",
   "/styles.css",
   "/app.js",
+  "/chatbot.js",
   "/manifest.json",
   "/assets/rti-official.gif",
   "/assets/indian-emblem-official.webp",
