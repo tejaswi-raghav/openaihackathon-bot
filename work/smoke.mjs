@@ -12,6 +12,7 @@ const { window } = dom;
 window.HTMLElement.prototype.scrollIntoView = () => {};
 window.eval(js);
 const $ = (selector) => window.document.querySelector(selector);
+const $$all = (selector) => window.document.querySelectorAll(selector);
 const click = (selector) =>
   $(selector).dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
 
@@ -63,6 +64,56 @@ if (
   throw new Error("Demo completion failed");
 if (!window.localStorage.getItem("rti-saathi-cases"))
   throw new Error("On-device case history was not saved");
+
+// --- Citizen feedback loop ---
+if ($("#feedbackButtons").hidden || !$("#feedbackFollowup").hidden)
+  throw new Error("Feedback loop did not reset to its initial state after submission");
+$("#feedbackButtons").querySelector('[data-feedback="no"]').dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if ($("#feedbackFollowup").hidden || !$("#feedbackButtons").hidden)
+  throw new Error("Choosing \"No\" did not reveal the follow-up reasons");
+$("#feedbackFollowup").querySelector('[data-reason="understand"]').dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if ($("#feedbackThanks").hidden || !$("#feedbackFollowup").hidden)
+  throw new Error("Choosing a reason did not show the thank-you message");
+const feedbackLog = JSON.parse(window.localStorage.getItem("rti-saathi-feedback") || "[]");
+if (!feedbackLog.length || feedbackLog[0].outcome !== "no" || feedbackLog[0].reason !== "understand")
+  throw new Error("Feedback was not logged on this device");
+
+// --- Life-event navigation ---
+const lifeEventLinks = $$all(".life-event-chip");
+if (lifeEventLinks.length !== 10)
+  throw new Error("Expected 10 life-event links");
+if (![...lifeEventLinks].every((a) => a.getAttribute("href") === "#examples"))
+  throw new Error("Life-event links should all point to the What can I ask section");
+
+// --- Offline help near me ---
+click('[data-action="offline-help"]');
+if ($("#offlineHelpModal").hidden) throw new Error("Offline help modal did not open");
+if ($$all(".offline-help-link").length !== 3)
+  throw new Error("Offline help modal should list three options");
+click('[data-action="close-offline-help"]');
+if (!$("#offlineHelpModal").hidden) throw new Error("Offline help modal did not close");
+
+// --- Humanized application tracker ---
+window.fetch = async () => ({
+  ok: true,
+  json: async () => ({
+    reference: JSON.parse(window.localStorage.getItem("rti-saathi-cases"))[0].reference,
+    status: "Draft prepared",
+    governmentSubmission: false,
+    nextAction: "Download the filing pack and continue on the correct official RTI portal.",
+  }),
+});
+click('[data-action="track"]');
+if (!$("#statusTracker").hidden) throw new Error("Status tracker should start hidden");
+$("#trackDemoButton").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+await new Promise((resolve) => setTimeout(resolve, 0));
+await new Promise((resolve) => setTimeout(resolve, 0));
+if ($("#statusTracker").hidden || $$all(".tracker-step").length !== 5)
+  throw new Error("Status tracker did not render the humanized checklist");
+if (!$("#statusTracker").textContent.includes("What happens next?"))
+  throw new Error("Status tracker did not explain what happens next");
+delete window.fetch;
+click('[data-action="close-track"]');
 click('[data-action="cases"]');
 if (
   $("#casesModal").hidden ||
@@ -218,6 +269,28 @@ if (!lastRow.textContent.includes("\u20b910") || !lastRow.textContent.includes("
 $("#languageSelect").value = "en";
 $("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
 
+// --- Connect with an agent (demo hand-off) ---
+$("#chatAgentButton").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+lastRow = $("#chatMessages").lastElementChild;
+if (!lastRow.textContent.includes("your Saathi"))
+  throw new Error("Connect-with-agent did not produce the expected demo reply");
+if (!lastRow.querySelector(".chat-tag") || !lastRow.querySelector(".chat-tag").textContent.includes("agent"))
+  throw new Error("Connect-with-agent reply should be labelled as a demo hand-off");
+
+// --- Voice message (demo placeholder) ---
+$("#chatMicButton").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if (!$("#chatMessages").lastElementChild.classList.contains("is-user"))
+  throw new Error("Voice message did not register the user's side of the exchange");
+await new Promise((resolve) => setTimeout(resolve, 750));
+lastRow = $("#chatMessages").lastElementChild;
+if (!lastRow.querySelector(".chat-tag") || !lastRow.querySelector(".chat-tag").textContent.includes("Voice"))
+  throw new Error("Voice message did not produce a labelled demo reply");
+
+// --- Feedback loop hands off to the agent for "I need human assistance" ---
+$("#feedbackFollowup").querySelector('[data-reason="human"]').dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if (!chatSidebar.classList.contains("is-open"))
+  throw new Error("Choosing \"I need human assistance\" should open the Ask Saathi sidebar");
+
 console.log(
-  "Smoke test passed: all 22 language essentials, RTL direction, onboarding, routing, four-step form, review, confirmation, automatic low-data architecture, and the Ask Saathi chat sidebar (open/close, language sync, status check, offline fallback).",
+  "Smoke test passed: all 22 language essentials, RTL direction, onboarding, routing, four-step form, review, confirmation, feedback loop, life-event navigation, offline-help modal, humanized status tracker, automatic low-data architecture, and the Ask Saathi chat sidebar (open/close, language sync, status check, offline fallback, connect-with-agent, voice-message demo).",
 );
