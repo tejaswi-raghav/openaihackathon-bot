@@ -873,42 +873,46 @@
       </section>
     </div>
 
-    <div class="modal" id="chatModal" hidden>
-      <div class="modal-backdrop" data-action="close-chat"></div>
-      <section
-        class="modal-panel small-panel"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="chatTitle"
-      >
-        <header>
-          <div>
-            <span class="modal-kicker" id="chatKicker">ASK SAATHI</span>
-            <h2 id="chatTitle">What would you like to know?</h2>
-          </div>
-          <button type="button" class="close-button" data-action="close-chat" aria-label="Close">×</button>
-        </header>
-        <p id="chatIntro">
-          I can explain how this site works — filing, fees, timelines, or finding the right authority.
-        </p>
-        <div class="chat-chips" id="chatChips"></div>
-        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
-        <form class="chat-form" id="chatForm">
+    <aside
+      class="chat-sidebar"
+      id="chatSidebar"
+      role="complementary"
+      aria-labelledby="chatTitle"
+      aria-hidden="true"
+      inert
+    >
+      <header class="chat-sidebar__head">
+        <div>
+          <span class="modal-kicker" id="chatKicker">ASK SAATHI</span>
+          <h2 id="chatTitle">What would you like to know?</h2>
+          <span class="chat-status" id="chatStatus" hidden></span>
+        </div>
+        <button type="button" class="close-button" data-action="close-chat" aria-label="Close">×</button>
+      </header>
+      <p id="chatIntro">
+        I can explain how this site works — filing, fees, timelines, or finding the right authority.
+      </p>
+      <div class="chat-chips" id="chatChips"></div>
+      <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
+      <form class="chat-form" id="chatForm">
+        <div class="chat-input-wrap">
           <textarea
             id="chatInput"
-            class="large-input"
             rows="1"
             aria-label="Your question"
             placeholder="Type a question…"
           ></textarea>
-          <button type="submit" class="next-button" id="chatSend">Ask</button>
-        </form>
-        <div class="quiet-note chat-note" id="chatNote">
-          <span aria-hidden="true">✓</span>
-          <span>General guidance only, not legal advice — use the official portals linked on this page to file or check status.</span>
         </div>
-      </section>
-    </div>
+        <button type="submit" class="chat-send" id="chatSend" aria-label="Send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        </button>
+      </form>
+      <div class="quiet-note chat-note" id="chatNote">
+        <span aria-hidden="true">✓</span>
+        <span>General guidance only, not legal advice — use the official portals linked on this page to file or check status.</span>
+      </div>
+    </aside>
+    <div class="chat-scrim" id="chatScrim" data-action="close-chat"></div>
 
     <button
       type="button"
@@ -921,6 +925,7 @@
 
     <div class="offline-toast" id="offlineToast" hidden>
       <span>⌁</span>
+
       <p>
         <strong data-i18n="offlineNow">You’re offline</strong
         ><small data-i18n="offlineNowSub"

@@ -20,6 +20,8 @@ A citizen-first, low-bandwidth reimagining of India's Right to Information journ
 - `GET /api/authorities?q=railway&level=central` — lightweight authority suggestions.
 - `POST /api/analyze` — deterministic request-quality feedback; request text is not persisted.
 - `GET /api/demo-status?reference=RTI-DEMO-2026-ABC123` — demo-only status boundary.
+- `GET /api/chat` — reports whether the Ask Saathi assistant has an OpenAI key configured (`{configured: boolean}`), without exposing the key itself.
+- `POST /api/chat` — Ask Saathi sidebar assistant; requires `OPENAI_API_KEY` (optionally `OPENAI_MODEL`) as a Vercel environment variable, falls back to an on-device answer set otherwise.
 - `npm test` and `npm run build` verify the citizen journey and serverless helpers.
 
 ## Important

@@ -488,7 +488,6 @@ const requestModal = $("#requestModal"),
   trackModal = $("#trackModal"),
   casesModal = $("#casesModal"),
   stateModal = $("#stateModal"),
-  chatModal = $("#chatModal"),
   form = $("#requestForm");
 const stateNames = [
   "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh",
@@ -697,9 +696,6 @@ $$('[data-action="cases"]').forEach((b) =>
 $$('[data-action="state-directory"]').forEach((b) =>
   b.addEventListener("click", () => openModal(stateModal)),
 );
-$$('[data-action="chat"]').forEach((b) =>
-  b.addEventListener("click", () => openModal(chatModal)),
-);
 $$('[data-action="close-modal"]').forEach((b) =>
   b.addEventListener("click", () => closeModal(requestModal)),
 );
@@ -708,7 +704,6 @@ $$('[data-action="close-track"]').forEach((b) =>
 );
 $$('[data-action="close-cases"]').forEach((b) => b.addEventListener("click", () => closeModal(casesModal)));
 $$('[data-action="close-state"]').forEach((b) => b.addEventListener("click", () => closeModal(stateModal)));
-$$('[data-action="close-chat"]').forEach((b) => b.addEventListener("click", () => closeModal(chatModal)));
 $("#nextButton").addEventListener("click", () => {
   if (!validateStep()) return;
   const level = $('[name="level"]:checked')?.value;
@@ -822,7 +817,6 @@ document.addEventListener("keydown", (e) => {
     if (!trackModal.hidden) closeModal(trackModal);
     if (!casesModal.hidden) closeModal(casesModal);
     if (!stateModal.hidden) closeModal(stateModal);
-    if (!chatModal.hidden) closeModal(chatModal);
   }
 });
 function networkState() {
