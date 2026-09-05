@@ -71,4 +71,19 @@ const sentBody = JSON.parse(capturedRequest.options.body);
 if (!sentBody.systemInstruction.parts[0].text.includes("Hindi")) throw new Error("Chat endpoint did not instruct the model to reply in the requested language");
 if (sentBody.contents.length !== 3 || sentBody.contents[1].role !== "model") throw new Error("Chat endpoint did not map prior assistant turns to Gemini's 'model' role");
 
-console.log("API smoke passed: health/privacy, authority matching, State routing, request analysis, demo-status boundary, and chat assistant on Gemini (unconfigured + mocked-model paths).");
+process.env.GEMINI_API_KEY = "test-key-not-real";
+globalThis.fetch = async (url, options) => {
+  capturedRequest = { url, options };
+  return { ok: true, status: 200, json: async () => ({ candidates: [{ content: { parts: [{ text: "English then Hindi." }] } }] }) };
+};
+const chatOtherLangResult = await invoke(chat, { method: "POST", body: { message: "How do I file a request?", lang: "ta" } });
+globalThis.fetch = originalFetch;
+delete process.env.GEMINI_API_KEY;
+if (chatOtherLangResult.status !== 200) throw new Error("Chat endpoint failed for a language outside English/Hindi");
+const otherLangPrompt = JSON.parse(capturedRequest.options.body).systemInstruction.parts[0].text;
+if (!otherLangPrompt.includes("English first") || !otherLangPrompt.includes("Hindi"))
+  throw new Error("Chat endpoint did not instruct a bilingual English-then-Hindi reply for a language it doesn't natively support");
+if (!otherLangPrompt.includes("Tamil"))
+  throw new Error("Chat endpoint did not mention the visitor's actual interface language for context");
+
+console.log("API smoke passed: health/privacy, authority matching, State routing, request analysis, demo-status boundary, and chat assistant on Gemini (unconfigured + mocked-model + bilingual-fallback-language paths).");

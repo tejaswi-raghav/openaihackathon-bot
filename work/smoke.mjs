@@ -153,14 +153,18 @@ if ($("#chatStatus").hidden || $("#chatStatus").textContent.trim() === "")
   throw new Error("Chat assistant status did not report a state");
 if (!$("#chatSend").querySelector("svg"))
   throw new Error("Chat send button lost its icon (chrome update must not overwrite it with text)");
-if (chatSidebar.dataset.theme !== "dark")
-  throw new Error("Chat sidebar should default to the dark theme");
-$("#chatThemeToggle").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
 if (chatSidebar.dataset.theme !== "light")
-  throw new Error("Theme toggle did not switch to light");
-$("#chatThemeToggle").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+  throw new Error("Chat sidebar should default to the site's light theme");
+$("#themeToggle").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if (window.document.documentElement.dataset.theme !== "dark")
+  throw new Error("Site theme toggle did not switch to dark");
 if (chatSidebar.dataset.theme !== "dark")
-  throw new Error("Theme toggle did not switch back to dark");
+  throw new Error("Chat sidebar did not follow the site's theme toggle to dark");
+$("#themeToggle").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if (window.document.documentElement.dataset.theme !== "light")
+  throw new Error("Site theme toggle did not switch back to light");
+if (chatSidebar.dataset.theme !== "light")
+  throw new Error("Chat sidebar did not follow the site's theme toggle back to light");
 
 click('[data-action="close-chat"]');
 if (chatSidebar.classList.contains("is-open")) throw new Error("Chat sidebar did not close");
@@ -180,6 +184,36 @@ if (!$("#chatMessages").querySelector(".chat-msg--user"))
   throw new Error("User message bubble did not render");
 if (!$("#chatMessages").querySelector(".chat-tag"))
   throw new Error("Offline fallback answers should be labelled as such");
+
+$("#languageSelect").value = "en";
+$("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
+
+// Bengali is one of the languages with dedicated native predefined prompts:
+// clicking a chip should answer instantly, in Bengali only, with no
+// fallback tag (it's a curated answer, not a fallback).
+$("#languageSelect").value = "bn";
+$("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
+click('[data-action="chat"]');
+if ($("#chatChips").children[0].textContent.trim() !== "আবেদন কীভাবে করব?")
+  throw new Error("Bengali quick prompts did not render natively");
+$("#chatChips").children[1].dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+let lastRow = $("#chatMessages").lastElementChild;
+if (!lastRow.textContent.includes("বিনামূল্যে"))
+  throw new Error("Native Bengali predefined answer did not appear");
+if (lastRow.querySelector(".chat-tag"))
+  throw new Error("A native predefined answer should not be labelled as an offline fallback");
+
+// Nepali has no dedicated native prompts: chips fall back to English labels,
+// but any answer - chip or free-typed - must come back English-then-Hindi,
+// never silently English-only or refused.
+$("#languageSelect").value = "ne";
+$("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
+if ($("#chatChips").children[1].textContent.trim() !== "What does it cost?")
+  throw new Error("A language without native prompts should fall back to English chip labels");
+$("#chatChips").children[1].dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+lastRow = $("#chatMessages").lastElementChild;
+if (!lastRow.textContent.includes("\u20b910") || !lastRow.textContent.includes("\u092e\u093e\u0928\u0915"))
+  throw new Error("Answer for an uncovered language did not come back bilingual (English then Hindi)");
 
 $("#languageSelect").value = "en";
 $("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
