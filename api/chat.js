@@ -100,6 +100,7 @@ module.exports = async function handler(req, res) {
     if (error && error.code === "not_configured") {
       return res.status(501).json({ error: "Assistant is not configured on this deployment", code: "not_configured" });
     }
+    console.error("chat.js upstream failure:", error && error.message, error && error.code);
     res.status(502).json({ error: "Could not reach the assistant right now", code: (error && error.code) || "upstream_error" });
   }
 };
