@@ -29,40 +29,51 @@ const SYSTEM_PROMPT = [
   "Answer only questions about using this site or the basic RTI process it guides people through. Keep answers to at most 2-3 short sentences, in plain everyday language, no legal jargon. If something is outside this scope (case-specific legal advice, guaranteed outcomes, anything unrelated to RTI), say so briefly and point to the official portal. Never claim to submit, pay for, or track a real request yourself.",
 ].join(" ");
 
-function buildMessages(message, history, lang) {
+function buildSystemPrompt(lang) {
   const languageName = LANG_NAMES[lang] || "English";
-  const system = `${SYSTEM_PROMPT} Reply only in ${languageName}, regardless of what language the visitor writes in, unless they explicitly ask for a different language.`;
+  return `${SYSTEM_PROMPT} Reply only in ${languageName}, regardless of what language the visitor writes in, unless they explicitly ask for a different language.`;
+}
+
+// Gemini's generateContent expects {role, parts:[{text}]} turns, with "model"
+// standing in for what OpenAI-style history calls "assistant", and no
+// "system" role in the turn list at all (that goes in systemInstruction).
+function buildGeminiContents(message, history) {
   const safeHistory = (Array.isArray(history) ? history : [])
     .filter((turn) => turn && (turn.role === "user" || turn.role === "assistant") && typeof turn.content === "string")
     .slice(-8)
-    .map((turn) => ({ role: turn.role, content: turn.content.slice(0, 1000) }));
-  return [{ role: "system", content: system }, ...safeHistory, { role: "user", content: message }];
+    .map((turn) => ({ role: turn.role === "assistant" ? "model" : "user", parts: [{ text: turn.content.slice(0, 1000) }] }));
+  return [...safeHistory, { role: "user", parts: [{ text: message }] }];
 }
 
-async function callOpenAI(messages) {
-  const apiKey = process.env.OPENAI_API_KEY;
+async function callGemini(systemPrompt, contents) {
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    const error = new Error("OpenAI API key is not configured");
+    const error = new Error("Gemini API key is not configured");
     error.code = "not_configured";
     throw error;
   }
-  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+  const response = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model, messages, temperature: 0.4, max_tokens: 220 }),
+    headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+    body: JSON.stringify({
+      contents,
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      generationConfig: { temperature: 0.4, maxOutputTokens: 220 },
+    }),
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const error = new Error((data && data.error && data.error.message) || `OpenAI request failed (${response.status})`);
+    const error = new Error((data && data.error && data.error.message) || `Gemini request failed (${response.status})`);
     error.code = "upstream_error";
     throw error;
   }
-  const reply = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content
-    ? data.choices[0].message.content.trim()
-    : "";
+  const candidate = data && data.candidates && data.candidates[0];
+  const parts = candidate && candidate.content && candidate.content.parts;
+  const reply = Array.isArray(parts) ? parts.map((p) => p.text || "").join("").trim() : "";
   if (!reply) {
-    const error = new Error("OpenAI returned an empty reply");
+    const error = new Error("Gemini returned an empty reply");
     error.code = "empty_reply";
     throw error;
   }
@@ -73,7 +84,7 @@ module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
   if (req.method === "GET") {
-    return res.status(200).json({ configured: Boolean(process.env.OPENAI_API_KEY) });
+    return res.status(200).json({ configured: Boolean(process.env.GEMINI_API_KEY) });
   }
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -87,23 +98,24 @@ module.exports = async function handler(req, res) {
   if (!message) return res.status(400).json({ error: "A question is required" });
 
   const lang = typeof body.lang === "string" && LANG_NAMES[body.lang] ? body.lang : "en";
-  const messages = buildMessages(message, body.history, lang);
+  const systemPrompt = buildSystemPrompt(lang);
+  const contents = buildGeminiContents(message, body.history);
 
   if (typeof fetch !== "function") {
     return res.status(500).json({ error: "Server fetch is unavailable", code: "no_fetch" });
   }
 
   try {
-    const reply = await callOpenAI(messages);
+    const reply = await callGemini(systemPrompt, contents);
     res.status(200).json({ reply, privacy: "not-stored" });
   } catch (error) {
     if (error && error.code === "not_configured") {
       return res.status(501).json({ error: "Assistant is not configured on this deployment", code: "not_configured" });
     }
-    console.error("chat.js upstream failure:", error && error.message, error && error.code);
     res.status(502).json({ error: "Could not reach the assistant right now", code: (error && error.code) || "upstream_error" });
   }
 };
 
-module.exports.buildMessages = buildMessages;
+module.exports.buildSystemPrompt = buildSystemPrompt;
+module.exports.buildGeminiContents = buildGeminiContents;
 module.exports.LANG_NAMES = LANG_NAMES;
