@@ -123,6 +123,7 @@ const translations = {
     stateModalBody:
       "प्राधिकरण का राज्य चुनें। हम आपको आधिकारिक DoPT राज्य RTI निर्देशिका तक ले जाएंगे।",
     stateSelectLabel: "राज्य या केंद्र शासित प्रदेश",
+    chatNav: "साथी से पूछें",
   },
   bn: {
     heroLine1: "আপনার প্রশ্ন।",
@@ -159,6 +160,7 @@ const translations = {
     offline: "ஆஃப்லைன் வரைவு",
     prototype:
       "சுயாதீன ஹேக்கத்தான் முன்மாதிரி. இந்திய அரசின் அதிகாரப்பூர்வ சேவை அல்ல.",
+    chatNav: "சாத்தியிடம் கேள்",
   },
   te: {
     heroLine1: "మీ ప్రశ్న.",
@@ -177,6 +179,7 @@ const translations = {
     languages: "22 భారతీయ భాషలు",
     offline: "ఆఫ్‌లైన్ డ్రాఫ్ట్",
     prototype: "స్వతంత్ర హ్యాకథాన్ నమూనా. భారత ప్రభుత్వ అధికారిక సేవ కాదు.",
+    chatNav: "సాథికి అడుగు",
   },
   mr: {
     heroLine1: "तुमचा प्रश्न.",
@@ -229,6 +232,7 @@ const translations = {
     languages: "22 ಭಾರತೀಯ ಭಾಷೆಗಳು",
     offline: "ಆಫ್‌ಲೈನ್ ಕರಡು",
     prototype: "ಸ್ವತಂತ್ರ ಹ್ಯಾಕಥಾನ್ ಮಾದರಿ. ಭಾರತ ಸರ್ಕಾರದ ಅಧಿಕೃತ ಸೇವೆಯಲ್ಲ.",
+    chatNav: "ಸಾಥಿಯನ್ನು ಕೇಳಿ",
   },
   ml: {
     heroLine1: "നിങ്ങളുടെ ചോദ്യം.",
@@ -248,6 +252,7 @@ const translations = {
     offline: "ഓഫ്‌ലൈൻ ഡ്രാഫ്റ്റ്",
     prototype:
       "സ്വതന്ത്ര ഹാക്കത്തോൺ മാതൃക. ഇന്ത്യാ സർക്കാരിന്റെ ഔദ്യോഗിക സേവനമല്ല.",
+    chatNav: "സാതിയോട് ചോദിക്കൂ",
   },
   pa: {
     heroLine1: "ਤੁਹਾਡਾ ਸਵਾਲ।",
@@ -483,6 +488,7 @@ const requestModal = $("#requestModal"),
   trackModal = $("#trackModal"),
   casesModal = $("#casesModal"),
   stateModal = $("#stateModal"),
+  chatModal = $("#chatModal"),
   form = $("#requestForm");
 const stateNames = [
   "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh",
@@ -508,6 +514,7 @@ function applyLanguage(lang) {
     if (val) el.textContent = val;
   });
   localStorage.setItem("rti-language", lang);
+  window.dispatchEvent(new CustomEvent("rti-saathi:language", { detail: { lang } }));
 }
 function openModal(modal) {
   lastFocus = document.activeElement;
@@ -690,6 +697,9 @@ $$('[data-action="cases"]').forEach((b) =>
 $$('[data-action="state-directory"]').forEach((b) =>
   b.addEventListener("click", () => openModal(stateModal)),
 );
+$$('[data-action="chat"]').forEach((b) =>
+  b.addEventListener("click", () => openModal(chatModal)),
+);
 $$('[data-action="close-modal"]').forEach((b) =>
   b.addEventListener("click", () => closeModal(requestModal)),
 );
@@ -698,6 +708,7 @@ $$('[data-action="close-track"]').forEach((b) =>
 );
 $$('[data-action="close-cases"]').forEach((b) => b.addEventListener("click", () => closeModal(casesModal)));
 $$('[data-action="close-state"]').forEach((b) => b.addEventListener("click", () => closeModal(stateModal)));
+$$('[data-action="close-chat"]').forEach((b) => b.addEventListener("click", () => closeModal(chatModal)));
 $("#nextButton").addEventListener("click", () => {
   if (!validateStep()) return;
   const level = $('[name="level"]:checked')?.value;
@@ -811,6 +822,7 @@ document.addEventListener("keydown", (e) => {
     if (!trackModal.hidden) closeModal(trackModal);
     if (!casesModal.hidden) closeModal(casesModal);
     if (!stateModal.hidden) closeModal(stateModal);
+    if (!chatModal.hidden) closeModal(chatModal);
   }
 });
 function networkState() {

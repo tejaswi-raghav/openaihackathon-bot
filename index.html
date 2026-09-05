@@ -151,6 +151,9 @@
         >
           Track request
         </button>
+        <button type="button" class="text-button" data-action="chat" data-i18n="chatNav">
+          Ask Saathi
+        </button>
       </nav>
       <div class="header-actions">
         <label class="language-control">
@@ -205,6 +208,9 @@
           data-i18n="track"
         >
           Track request
+        </button>
+        <button type="button" class="text-button" data-action="chat" data-i18n="chatNav">
+          Ask Saathi
         </button>
       </div>
     </header>
@@ -867,6 +873,52 @@
       </section>
     </div>
 
+    <div class="modal" id="chatModal" hidden>
+      <div class="modal-backdrop" data-action="close-chat"></div>
+      <section
+        class="modal-panel small-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="chatTitle"
+      >
+        <header>
+          <div>
+            <span class="modal-kicker" id="chatKicker">ASK SAATHI</span>
+            <h2 id="chatTitle">What would you like to know?</h2>
+          </div>
+          <button type="button" class="close-button" data-action="close-chat" aria-label="Close">×</button>
+        </header>
+        <p id="chatIntro">
+          I can explain how this site works — filing, fees, timelines, or finding the right authority.
+        </p>
+        <div class="chat-chips" id="chatChips"></div>
+        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
+        <form class="chat-form" id="chatForm">
+          <textarea
+            id="chatInput"
+            class="large-input"
+            rows="1"
+            aria-label="Your question"
+            placeholder="Type a question…"
+          ></textarea>
+          <button type="submit" class="next-button" id="chatSend">Ask</button>
+        </form>
+        <div class="quiet-note chat-note" id="chatNote">
+          <span aria-hidden="true">✓</span>
+          <span>General guidance only, not legal advice — use the official portals linked on this page to file or check status.</span>
+        </div>
+      </section>
+    </div>
+
+    <button
+      type="button"
+      class="chat-launcher"
+      data-action="chat"
+      aria-label="Ask Saathi about this site"
+    >
+      <span aria-hidden="true">?</span>
+    </button>
+
     <div class="offline-toast" id="offlineToast" hidden>
       <span>⌁</span>
       <p>
@@ -877,5 +929,6 @@
       </p>
     </div>
     <script type="module" src="/app.js"></script>
+    <script type="module" src="/chatbot.js"></script>
   </body>
 </html>
