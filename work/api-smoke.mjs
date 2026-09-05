@@ -4,6 +4,7 @@ const authorities = require("../api/authorities.js");
 const analyze = require("../api/analyze.js");
 const demoStatus = require("../api/demo-status.js");
 const health = require("../api/health.js");
+const chat = require("../api/chat.js");
 
 function invoke(handler, { method = "GET", query = {}, body = {} } = {}) {
   return new Promise((resolve, reject) => {
@@ -13,7 +14,10 @@ function invoke(handler, { method = "GET", query = {}, body = {} } = {}) {
       status(code) { this.statusCode = code; return this; },
       json(payload) { resolve({ status: this.statusCode, payload, headers: this.headers }); },
     };
-    try { handler({ method, query, body }, response); } catch (error) { reject(error); }
+    try {
+      const result = handler({ method, query, body }, response);
+      if (result && typeof result.catch === "function") result.catch(reject);
+    } catch (error) { reject(error); }
   });
 }
 
@@ -32,4 +36,33 @@ if (qualityResult.status !== 200 || qualityResult.payload.score < 80 || qualityR
 const statusResult = await invoke(demoStatus, { query: { reference: "RTI-DEMO-2026-ABC123" } });
 if (statusResult.status !== 200 || statusResult.payload.governmentSubmission !== false) throw new Error("Demo status boundary failed");
 
-console.log("API smoke passed: health/privacy, authority matching, State routing, request analysis, and demo-status boundary.");
+const chatMethodResult = await invoke(chat, { method: "GET" });
+if (chatMethodResult.status !== 405) throw new Error("Chat endpoint did not reject non-POST methods");
+
+const chatEmptyResult = await invoke(chat, { method: "POST", body: { message: "  " } });
+if (chatEmptyResult.status !== 400) throw new Error("Chat endpoint accepted an empty question");
+
+delete process.env.OPENAI_API_KEY;
+const chatUnconfiguredResult = await invoke(chat, { method: "POST", body: { message: "How do I file a request?" } });
+if (chatUnconfiguredResult.status !== 501 || chatUnconfiguredResult.payload.code !== "not_configured") throw new Error("Chat endpoint should report a clear 'not configured' state without a key");
+
+const originalFetch = globalThis.fetch;
+let capturedRequest = null;
+globalThis.fetch = async (url, options) => {
+  capturedRequest = { url, options };
+  return {
+    ok: true,
+    status: 200,
+    json: async () => ({ choices: [{ message: { content: "Reply from the mocked model." } }] }),
+  };
+};
+process.env.OPENAI_API_KEY = "test-key-not-real";
+const chatOkResult = await invoke(chat, { method: "POST", body: { message: "How do I file a request?", lang: "hi", history: [{ role: "user", content: "hi" }, { role: "assistant", content: "hello" }] } });
+globalThis.fetch = originalFetch;
+delete process.env.OPENAI_API_KEY;
+if (chatOkResult.status !== 200 || chatOkResult.payload.reply !== "Reply from the mocked model." || chatOkResult.payload.privacy !== "not-stored") throw new Error("Chat endpoint did not return the model's reply");
+if (!capturedRequest || !capturedRequest.options.headers.Authorization.includes("test-key-not-real")) throw new Error("Chat endpoint did not send the configured API key");
+const sentBody = JSON.parse(capturedRequest.options.body);
+if (!sentBody.messages[0].content.includes("Hindi")) throw new Error("Chat endpoint did not instruct the model to reply in the requested language");
+
+console.log("API smoke passed: health/privacy, authority matching, State routing, request analysis, demo-status boundary, and chat assistant (unconfigured + mocked-model paths).");

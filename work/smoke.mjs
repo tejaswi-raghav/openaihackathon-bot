@@ -135,6 +135,37 @@ if ($('[data-action="track"] [data-i18n="track"]').textContent.trim() !== "Track
   throw new Error("English tracking action was overridden by workspace copy");
 if ($("#liteToggle")) throw new Error("Manual Lite control should not exist");
 
+// --- Ask Saathi chat widget ---
+const chatbotJs = fs.readFileSync(new URL("../chatbot.js", import.meta.url), "utf8");
+window.eval(chatbotJs);
+
+click('[data-action="chat"]');
+if ($("#chatModal").hidden) throw new Error("Chat modal did not open");
+if ($("#chatChips").children.length !== 6)
+  throw new Error("Chat quick prompts did not render");
+if ($("#chatKicker").textContent.trim() !== "ASK SAATHI")
+  throw new Error("Chat chrome did not default to English");
+
+click('[data-action="close-chat"]');
+if (!$("#chatModal").hidden) throw new Error("Chat modal did not close");
+
+$("#languageSelect").value = "hi";
+$("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
+if ($("#chatKicker").textContent.trim() === "ASK SAATHI")
+  throw new Error("Chat widget did not sync with the site's language switcher");
+if ($("#chatChips").children[0].textContent.trim() === "How do I file a request?")
+  throw new Error("Chat quick prompts did not re-render in Hindi");
+
+click('[data-action="chat"]');
+$("#chatChips").children[1].dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if (!$("#chatMessages").textContent.includes("\u20b910"))
+  throw new Error("Offline fallback answer for the fee question did not appear");
+if (!$("#chatMessages").querySelector(".chat-msg--user"))
+  throw new Error("User message bubble did not render");
+
+$("#languageSelect").value = "en";
+$("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
+
 console.log(
-  "Smoke test passed: all 22 language essentials, RTL direction, onboarding, routing, four-step form, review, confirmation, and automatic low-data architecture.",
+  "Smoke test passed: all 22 language essentials, RTL direction, onboarding, routing, four-step form, review, confirmation, automatic low-data architecture, and the Ask Saathi chat widget (open/close, language sync, offline fallback).",
 );
