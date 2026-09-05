@@ -11,6 +11,11 @@
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/styles.css" />
     <title>RTI Saathi — Your right, made simple</title>
+    <script>
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem("rti-theme") || "light";
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
@@ -156,6 +161,9 @@
         </button>
       </nav>
       <div class="header-actions">
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
         <label class="language-control">
           <span class="sr-only">Choose language</span>
           <span aria-hidden="true">अ</span>
@@ -888,9 +896,6 @@
           <span class="chat-status" id="chatStatus" hidden></span>
         </div>
         <div class="chat-sidebar__head-actions">
-          <button type="button" class="chat-theme-toggle" id="chatThemeToggle" aria-label="Switch to light theme">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-          </button>
           <button type="button" class="close-button" data-action="close-chat" aria-label="Close">×</button>
         </div>
       </header>
