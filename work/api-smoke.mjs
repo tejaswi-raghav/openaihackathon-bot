@@ -36,13 +36,17 @@ if (qualityResult.status !== 200 || qualityResult.payload.score < 80 || qualityR
 const statusResult = await invoke(demoStatus, { query: { reference: "RTI-DEMO-2026-ABC123" } });
 if (statusResult.status !== 200 || statusResult.payload.governmentSubmission !== false) throw new Error("Demo status boundary failed");
 
-const chatMethodResult = await invoke(chat, { method: "GET" });
-if (chatMethodResult.status !== 405) throw new Error("Chat endpoint did not reject non-POST methods");
+const chatStatusResult = await invoke(chat, { method: "GET" });
+if (chatStatusResult.status !== 200 || typeof chatStatusResult.payload.configured !== "boolean")
+  throw new Error("Chat status check did not report a configured flag");
+
+const chatMethodResult = await invoke(chat, { method: "DELETE" });
+if (chatMethodResult.status !== 405) throw new Error("Chat endpoint did not reject unsupported methods");
 
 const chatEmptyResult = await invoke(chat, { method: "POST", body: { message: "  " } });
 if (chatEmptyResult.status !== 400) throw new Error("Chat endpoint accepted an empty question");
 
-delete process.env.OPENAI_API_KEY;
+delete process.env.GEMINI_API_KEY;
 const chatUnconfiguredResult = await invoke(chat, { method: "POST", body: { message: "How do I file a request?" } });
 if (chatUnconfiguredResult.status !== 501 || chatUnconfiguredResult.payload.code !== "not_configured") throw new Error("Chat endpoint should report a clear 'not configured' state without a key");
 
@@ -53,16 +57,18 @@ globalThis.fetch = async (url, options) => {
   return {
     ok: true,
     status: 200,
-    json: async () => ({ choices: [{ message: { content: "Reply from the mocked model." } }] }),
+    json: async () => ({ candidates: [{ content: { parts: [{ text: "Reply from the mocked model." }] } }] }),
   };
 };
-process.env.OPENAI_API_KEY = "test-key-not-real";
+process.env.GEMINI_API_KEY = "test-key-not-real";
 const chatOkResult = await invoke(chat, { method: "POST", body: { message: "How do I file a request?", lang: "hi", history: [{ role: "user", content: "hi" }, { role: "assistant", content: "hello" }] } });
 globalThis.fetch = originalFetch;
-delete process.env.OPENAI_API_KEY;
+delete process.env.GEMINI_API_KEY;
 if (chatOkResult.status !== 200 || chatOkResult.payload.reply !== "Reply from the mocked model." || chatOkResult.payload.privacy !== "not-stored") throw new Error("Chat endpoint did not return the model's reply");
-if (!capturedRequest || !capturedRequest.options.headers.Authorization.includes("test-key-not-real")) throw new Error("Chat endpoint did not send the configured API key");
+if (!capturedRequest || capturedRequest.options.headers["x-goog-api-key"] !== "test-key-not-real") throw new Error("Chat endpoint did not send the configured API key");
+if (!capturedRequest.url.includes(":generateContent")) throw new Error("Chat endpoint did not call the Gemini generateContent endpoint");
 const sentBody = JSON.parse(capturedRequest.options.body);
-if (!sentBody.messages[0].content.includes("Hindi")) throw new Error("Chat endpoint did not instruct the model to reply in the requested language");
+if (!sentBody.systemInstruction.parts[0].text.includes("Hindi")) throw new Error("Chat endpoint did not instruct the model to reply in the requested language");
+if (sentBody.contents.length !== 3 || sentBody.contents[1].role !== "model") throw new Error("Chat endpoint did not map prior assistant turns to Gemini's 'model' role");
 
-console.log("API smoke passed: health/privacy, authority matching, State routing, request analysis, demo-status boundary, and chat assistant (unconfigured + mocked-model paths).");
+console.log("API smoke passed: health/privacy, authority matching, State routing, request analysis, demo-status boundary, and chat assistant on Gemini (unconfigured + mocked-model paths).");

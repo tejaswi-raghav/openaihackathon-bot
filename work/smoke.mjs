@@ -139,15 +139,31 @@ if ($("#liteToggle")) throw new Error("Manual Lite control should not exist");
 const chatbotJs = fs.readFileSync(new URL("../chatbot.js", import.meta.url), "utf8");
 window.eval(chatbotJs);
 
+const chatSidebar = $("#chatSidebar");
+if (chatSidebar.classList.contains("is-open"))
+  throw new Error("Chat sidebar should start closed");
+
 click('[data-action="chat"]');
-if ($("#chatModal").hidden) throw new Error("Chat modal did not open");
+if (!chatSidebar.classList.contains("is-open")) throw new Error("Chat sidebar did not open");
 if ($("#chatChips").children.length !== 6)
   throw new Error("Chat quick prompts did not render");
 if ($("#chatKicker").textContent.trim() !== "ASK SAATHI")
   throw new Error("Chat chrome did not default to English");
+if ($("#chatStatus").hidden || $("#chatStatus").textContent.trim() === "")
+  throw new Error("Chat assistant status did not report a state");
+if (!$("#chatSend").querySelector("svg"))
+  throw new Error("Chat send button lost its icon (chrome update must not overwrite it with text)");
+if (chatSidebar.dataset.theme !== "dark")
+  throw new Error("Chat sidebar should default to the dark theme");
+$("#chatThemeToggle").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if (chatSidebar.dataset.theme !== "light")
+  throw new Error("Theme toggle did not switch to light");
+$("#chatThemeToggle").dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+if (chatSidebar.dataset.theme !== "dark")
+  throw new Error("Theme toggle did not switch back to dark");
 
 click('[data-action="close-chat"]');
-if (!$("#chatModal").hidden) throw new Error("Chat modal did not close");
+if (chatSidebar.classList.contains("is-open")) throw new Error("Chat sidebar did not close");
 
 $("#languageSelect").value = "hi";
 $("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
@@ -162,10 +178,12 @@ if (!$("#chatMessages").textContent.includes("\u20b910"))
   throw new Error("Offline fallback answer for the fee question did not appear");
 if (!$("#chatMessages").querySelector(".chat-msg--user"))
   throw new Error("User message bubble did not render");
+if (!$("#chatMessages").querySelector(".chat-tag"))
+  throw new Error("Offline fallback answers should be labelled as such");
 
 $("#languageSelect").value = "en";
 $("#languageSelect").dispatchEvent(new window.Event("change", { bubbles: true }));
 
 console.log(
-  "Smoke test passed: all 22 language essentials, RTL direction, onboarding, routing, four-step form, review, confirmation, automatic low-data architecture, and the Ask Saathi chat widget (open/close, language sync, offline fallback).",
+  "Smoke test passed: all 22 language essentials, RTL direction, onboarding, routing, four-step form, review, confirmation, automatic low-data architecture, and the Ask Saathi chat sidebar (open/close, language sync, status check, offline fallback).",
 );
