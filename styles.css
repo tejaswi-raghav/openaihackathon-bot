@@ -176,9 +176,9 @@ a {
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(0.9rem, 1.45vw, 1.55rem);
   margin-left: auto;
-  margin-right: 2rem;
+  margin-right: clamp(0.75rem, 1.4vw, 1.5rem);
 }
 .desktop-nav a,
 .text-button {
@@ -1962,6 +1962,16 @@ footer a {
 .brand > span:last-child {
   border-left: 1px solid var(--line);
   padding-left: 0.7rem;
+}
+@media (min-width: 901px) {
+  /* The official mark and RTI Saathi name already establish the purpose.
+     Removing this repeated strapline keeps every navigation item on one line. */
+  .brand small {
+    display: none;
+  }
+  .brand > span:last-child {
+    padding-bottom: 0.08rem;
+  }
 }
 .header-prototype {
   margin-left: 0.8rem;

@@ -94,10 +94,25 @@ async function chat(request, env) {
   return json({ reply, privacy: "not-stored" });
 }
 
+function demoStatus(request) {
+  if (request.method !== "GET") return json({ error: "Method not allowed" }, 405);
+  const reference = new URL(request.url).searchParams.get("reference")?.trim().toUpperCase() || "";
+  if (!/^RTI-DEMO-\d{4}-[A-Z0-9]{6}$/.test(reference)) {
+    return json({ error: "Enter a valid RTI Saathi demo reference" }, 400);
+  }
+  return json({
+    reference,
+    status: "Draft prepared",
+    governmentSubmission: false,
+    nextAction: "Download the filing pack and continue on the correct official RTI portal.",
+  });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/api/chat") return chat(request, env);
+    if (url.pathname === "/api/demo-status") return demoStatus(request);
     if (url.pathname === "/api/health") {
       return json({ ok: true, service: "rti-saathi-helper", privacy: "no-request-storage", version: 2 });
     }
