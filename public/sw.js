@@ -1,4 +1,4 @@
-const CACHE = "rti-saathi-v5";
+const CACHE = "rti-saathi-v6";
 const ASSETS = [
   "/",
   "/index.html",
@@ -6,9 +6,14 @@ const ASSETS = [
   "/app.js",
   "/chatbot.js",
   "/manifest.json",
-  "/assets/rti-official.gif",
+  "/favicon.png",
+  "/assets/rti-saathi-logo.webp",
+  "/assets/icon-192.png",
+  "/assets/icon-512.png",
   "/assets/indian-emblem-official.webp",
   "/assets/rural-rti-citizen-v1.webp",
+  "/assets/citizens-diverse.webp",
+  "/assets/citizens-aspirational.webp",
 ];
 self.addEventListener("install", (e) =>
   e.waitUntil(
