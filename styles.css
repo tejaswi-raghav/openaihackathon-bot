@@ -91,7 +91,7 @@ a {
   left: 1rem;
   top: -5rem;
   z-index: 1000;
-  background: var(--ink);
+  background: #000080;
   color: white;
   padding: 0.8rem 1rem;
   border-radius: 0.5rem;
@@ -809,7 +809,7 @@ h1 em:after {
   gap: 2rem;
 }
 .cta-section .section-label {
-  color: var(--ink);
+  color: #000080;
 }
 .cta-section h2 {
   font-size: clamp(2.4rem, 4vw, 4rem);
@@ -1400,7 +1400,7 @@ footer a {
   bottom: 1rem;
   transform: translateX(-50%);
   z-index: 200;
-  background: var(--ink);
+  background: #000080;
   color: white;
   border-radius: 9px;
   padding: 0.8rem 1rem;
@@ -1964,9 +1964,10 @@ footer a {
   margin: 1rem 0 0;
 }
 .brand-logo {
-  width: 92px;
-  height: auto;
+  width: 56px;
+  height: 56px;
   object-fit: contain;
+  border-radius: 10px;
 }
 .brand > span:last-child {
   border-left: 1px solid var(--line);
@@ -2031,7 +2032,7 @@ footer a {
   font-weight: 700;
 }
 .citizen-action--primary .citizen-action__icon {
-  color: var(--ink);
+  color: #000080;
   background: var(--saffron);
 }
 .citizen-action b,
@@ -2098,7 +2099,7 @@ footer a {
   justify-content: center;
   align-items: center;
   background: var(--saffron);
-  color: var(--ink);
+  color: #000080;
   box-shadow: 0 14px 30px rgba(24, 53, 47, 0.18);
 }
 .fact-card strong {
@@ -2183,6 +2184,7 @@ footer a {
   }
   .brand-logo {
     width: 64px;
+    height: 64px;
   }
   .brand > span:last-child {
     display: block;
@@ -2454,9 +2456,11 @@ body {
 h1,
 .guide-card h2,
 .section-heading h2,
-.examples-copy h2,
-.cta-section h2 {
+.examples-copy h2 {
   color: var(--ink);
+}
+.cta-section h2 {
+  color: #000080;
 }
 h1 em {
   color: var(--green-dark);
@@ -2536,19 +2540,38 @@ h1 em:after {
 }
 .examples-section {
   position: relative;
-  background: var(--ink);
+  overflow: hidden;
+  background: #000080;
   border-top: 8px solid var(--saffron);
   border-bottom: 8px solid var(--green);
+}
+.examples-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.4;
+  background: url("/assets/citizens-diverse.webp") center/cover no-repeat;
 }
 .examples-section h2,
 .examples-section .question-stack p {
   color: #fff;
 }
 .cta-section {
-  color: var(--ink);
-  background: #f7a24e;
+  position: relative;
+  overflow: hidden;
+  color: #000080;
+  background: var(--saffron);
   border-left: 8px solid var(--chakra);
   border-right: 8px solid var(--green);
+}
+.cta-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.4;
+  background: url("/assets/citizens-aspirational.webp") center/cover no-repeat;
 }
 footer {
   background: #fff;
