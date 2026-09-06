@@ -2986,6 +2986,30 @@ footer {
   border-color: var(--ai);
   color: #fff;
 }
+.chat-clear-button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--dk-border);
+  border-radius: 9px;
+  background: var(--dk-panel-2);
+  color: var(--dk-muted);
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.chat-clear-button:hover,
+.chat-clear-button:focus-visible {
+  color: #fff;
+  background: #b42318;
+  border-color: #b42318;
+}
+.chat-clear-button svg {
+  width: 16px;
+  height: 16px;
+}
 .chat-note {
   flex: none;
   padding: 0 1.2rem 1rem;

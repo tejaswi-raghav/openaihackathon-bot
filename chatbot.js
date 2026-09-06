@@ -188,6 +188,7 @@ let history = [];
 let isOpen = false;
 let assistantConfigured = null; // null = unknown, true/false once checked
 let lastFocus = null;
+let conversationVersion = 0;
 
 function strings() { return STRINGS[chromeLang]; }
 
@@ -200,6 +201,7 @@ const input = $("#chatInput");
 const sendBtn = $("#chatSend");
 const micBtn = $("#chatMicButton");
 const agentBtn = $("#chatAgentButton");
+const clearChatBtn = $("#clearChatButton");
 const kicker = $("#chatKicker");
 const title = $("#chatTitle");
 const intro = $("#chatIntro");
@@ -305,6 +307,17 @@ document.querySelectorAll('[data-action="chat"]').forEach((b) =>
 document.querySelectorAll('[data-action="close-chat"]').forEach((b) =>
   b.addEventListener("click", closeSidebar)
 );
+clearChatBtn.addEventListener("click", () => {
+  // Advancing this marker means late network or demo replies from an earlier
+  // conversation are discarded instead of reappearing after the clear.
+  conversationVersion += 1;
+  history = [];
+  messagesBox.replaceChildren();
+  input.value = "";
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  speaking = null;
+  input.focus();
+});
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && isOpen) closeSidebar();
 });
@@ -492,6 +505,7 @@ function answerForKey(langCode, key) {
 async function sendMessage(text, matchedPrompt, isNativeAnswer) {
   const trimmed = (text || "").trim();
   if (!trimmed) return;
+  const messageVersion = conversationVersion;
   appendMessage("user", trimmed);
   history.push({ role: "user", content: trimmed });
   input.value = "";
@@ -513,6 +527,7 @@ async function sendMessage(text, matchedPrompt, isNativeAnswer) {
   // matcher can do, but English-then-Hindi reaches almost every visitor.
   const fallBack = () => {
     typing.remove();
+    if (messageVersion !== conversationVersion) return;
     const key = matchedPrompt ? matchedPrompt.key : (matchKey(trimmed) || "ask");
     const answer = (siteLang === "en" || siteLang === "hi")
       ? answerForKey(siteLang, key)
@@ -536,6 +551,7 @@ async function sendMessage(text, matchedPrompt, isNativeAnswer) {
     const reply = data && data.reply;
     if (!reply) throw new Error("empty reply");
     typing.remove();
+    if (messageVersion !== conversationVersion) return;
     appendMessage("bot", reply);
     history.push({ role: "assistant", content: reply });
     if (assistantConfigured !== true) { assistantConfigured = true; renderStatus(); }
@@ -575,8 +591,10 @@ micBtn.addEventListener("click", () => {
   micBtn.classList.add("is-recording");
   appendMessage("user", "\ud83c\udfa4 Voice message");
   history.push({ role: "user", content: "(voice message)" });
+  const messageVersion = conversationVersion;
   setTimeout(() => {
     micBtn.classList.remove("is-recording");
+    if (messageVersion !== conversationVersion) return;
     const reply = VOICE_REPLIES[Math.floor(Math.random() * VOICE_REPLIES.length)];
     appendMessage("bot", reply, "Voice reply \u00b7 Demo");
     history.push({ role: "assistant", content: reply });
