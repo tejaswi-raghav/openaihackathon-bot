@@ -23,6 +23,19 @@ const LANG_NAMES = {
   sat: "Santali",
 };
 
+// Replaced with the production asset map by build-worker.mjs. Keeping this
+// empty in source lets the worker smoke test provide a lightweight mock.
+const SITE_ASSETS = {};
+
+function assetResponse(request) {
+  const url = new URL(request.url);
+  const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
+  const asset = SITE_ASSETS[pathname];
+  if (!asset) return null;
+  const binary = Uint8Array.from(atob(asset.body), (char) => char.charCodeAt(0));
+  return new Response(binary, { headers: { "Content-Type": asset.type, "Cache-Control": "public, max-age=3600" } });
+}
+
 const SITE_CONTEXT = [
   "You are Saathi, the on-page guide for RTI Saathi, an independent hackathon prototype that helps Indian citizens understand the Right to Information process.",
   "It is not an official Government of India service and never submits, pays for, or tracks a real request.",
@@ -89,6 +102,8 @@ export default {
       return json({ ok: true, service: "rti-saathi-helper", privacy: "no-request-storage", version: 2 });
     }
     if (url.pathname.startsWith("/api/")) return json({ error: "Not found" }, 404);
+    const staticAsset = assetResponse(request);
+    if (staticAsset) return staticAsset;
     if (env.ASSETS && typeof env.ASSETS.fetch === "function") return env.ASSETS.fetch(request);
     return new Response("Not found", { status: 404 });
   },
