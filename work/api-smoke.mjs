@@ -46,7 +46,7 @@ if (chatMethodResult.status !== 405) throw new Error("Chat endpoint did not reje
 const chatEmptyResult = await invoke(chat, { method: "POST", body: { message: "  " } });
 if (chatEmptyResult.status !== 400) throw new Error("Chat endpoint accepted an empty question");
 
-delete process.env.GEMINI_API_KEY;
+delete process.env.GROQ_API_KEY;
 const chatUnconfiguredResult = await invoke(chat, { method: "POST", body: { message: "How do I file a request?" } });
 if (chatUnconfiguredResult.status !== 501 || chatUnconfiguredResult.payload.code !== "not_configured") throw new Error("Chat endpoint should report a clear 'not configured' state without a key");
 
@@ -57,33 +57,33 @@ globalThis.fetch = async (url, options) => {
   return {
     ok: true,
     status: 200,
-    json: async () => ({ candidates: [{ content: { parts: [{ text: "Reply from the mocked model." }] } }] }),
+    json: async () => ({ choices: [{ message: { content: "Reply from the mocked model." } }] }),
   };
 };
-process.env.GEMINI_API_KEY = "test-key-not-real";
+process.env.GROQ_API_KEY = "test-key-not-real";
 const chatOkResult = await invoke(chat, { method: "POST", body: { message: "How do I file a request?", lang: "hi", history: [{ role: "user", content: "hi" }, { role: "assistant", content: "hello" }] } });
 globalThis.fetch = originalFetch;
-delete process.env.GEMINI_API_KEY;
+delete process.env.GROQ_API_KEY;
 if (chatOkResult.status !== 200 || chatOkResult.payload.reply !== "Reply from the mocked model." || chatOkResult.payload.privacy !== "not-stored") throw new Error("Chat endpoint did not return the model's reply");
-if (!capturedRequest || capturedRequest.options.headers["x-goog-api-key"] !== "test-key-not-real") throw new Error("Chat endpoint did not send the configured API key");
-if (!capturedRequest.url.includes(":generateContent")) throw new Error("Chat endpoint did not call the Gemini generateContent endpoint");
+if (!capturedRequest || capturedRequest.options.headers.Authorization !== "Bearer test-key-not-real") throw new Error("Chat endpoint did not send the configured API key");
+if (capturedRequest.url !== "https://api.groq.com/openai/v1/chat/completions") throw new Error("Chat endpoint did not call the Groq chat completions endpoint");
 const sentBody = JSON.parse(capturedRequest.options.body);
-if (!sentBody.systemInstruction.parts[0].text.includes("Hindi")) throw new Error("Chat endpoint did not instruct the model to reply in the requested language");
-if (sentBody.contents.length !== 3 || sentBody.contents[1].role !== "model") throw new Error("Chat endpoint did not map prior assistant turns to Gemini's 'model' role");
+if (!sentBody.messages[0].content.includes("Hindi")) throw new Error("Chat endpoint did not instruct the model to reply in the requested language");
+if (sentBody.messages.length !== 4 || sentBody.messages[2].role !== "assistant") throw new Error("Chat endpoint did not preserve prior assistant turns for Groq");
 
-process.env.GEMINI_API_KEY = "test-key-not-real";
+process.env.GROQ_API_KEY = "test-key-not-real";
 globalThis.fetch = async (url, options) => {
   capturedRequest = { url, options };
-  return { ok: true, status: 200, json: async () => ({ candidates: [{ content: { parts: [{ text: "English then Hindi." }] } }] }) };
+  return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content: "English then Hindi." } }] }) };
 };
 const chatOtherLangResult = await invoke(chat, { method: "POST", body: { message: "How do I file a request?", lang: "ta" } });
 globalThis.fetch = originalFetch;
-delete process.env.GEMINI_API_KEY;
+delete process.env.GROQ_API_KEY;
 if (chatOtherLangResult.status !== 200) throw new Error("Chat endpoint failed for a language outside English/Hindi");
-const otherLangPrompt = JSON.parse(capturedRequest.options.body).systemInstruction.parts[0].text;
+const otherLangPrompt = JSON.parse(capturedRequest.options.body).messages[0].content;
 if (!otherLangPrompt.includes("English first") || !otherLangPrompt.includes("Hindi"))
   throw new Error("Chat endpoint did not instruct a bilingual English-then-Hindi reply for a language it doesn't natively support");
 if (!otherLangPrompt.includes("Tamil"))
   throw new Error("Chat endpoint did not mention the visitor's actual interface language for context");
 
-console.log("API smoke passed: health/privacy, authority matching, State routing, request analysis, demo-status boundary, and chat assistant on Gemini (unconfigured + mocked-model + bilingual-fallback-language paths).");
+console.log("API smoke passed: health/privacy, authority matching, State routing, request analysis, demo-status boundary, and Groq chat assistant (unconfigured + mocked-model + bilingual-fallback-language paths).");

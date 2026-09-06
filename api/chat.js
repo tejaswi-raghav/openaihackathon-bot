@@ -46,46 +46,42 @@ function buildSystemPrompt(lang) {
   return `${SYSTEM_PROMPT} The visitor's interface is set to ${languageName}. Reply in English first, then on a new line repeat the same answer in Hindi (Devanagari script). Never attempt ${languageName} or any other language, and never give only one of the two parts, regardless of what language the visitor writes in.`;
 }
 
-// Gemini's generateContent expects {role, parts:[{text}]} turns, with "model"
-// standing in for what OpenAI-style history calls "assistant", and no
-// "system" role in the turn list at all (that goes in systemInstruction).
-function buildGeminiContents(message, history) {
+function buildGroqMessages(message, history, systemPrompt) {
   const safeHistory = (Array.isArray(history) ? history : [])
     .filter((turn) => turn && (turn.role === "user" || turn.role === "assistant") && typeof turn.content === "string")
     .slice(-8)
-    .map((turn) => ({ role: turn.role === "assistant" ? "model" : "user", parts: [{ text: turn.content.slice(0, 1000) }] }));
-  return [...safeHistory, { role: "user", parts: [{ text: message }] }];
+    .map((turn) => ({ role: turn.role, content: turn.content.slice(0, 1000) }));
+  return [{ role: "system", content: systemPrompt }, ...safeHistory, { role: "user", content: message }];
 }
 
-async function callGemini(systemPrompt, contents) {
-  const apiKey = process.env.GEMINI_API_KEY;
+async function callGroq(messages) {
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    const error = new Error("Gemini API key is not configured");
+    const error = new Error("Groq API key is not configured");
     error.code = "not_configured";
     throw error;
   }
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+  const model = process.env.GROQ_MODEL || "qwen/qwen3.8-27b";
+  const url = "https://api.groq.com/openai/v1/chat/completions";
   const response = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify({
-      contents,
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-      generationConfig: { temperature: 0.4, maxOutputTokens: 220 },
+      model,
+      messages,
+      temperature: 0.4,
+      max_tokens: 220,
     }),
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const error = new Error((data && data.error && data.error.message) || `Gemini request failed (${response.status})`);
+    const error = new Error((data && data.error && data.error.message) || `Groq request failed (${response.status})`);
     error.code = "upstream_error";
     throw error;
   }
-  const candidate = data && data.candidates && data.candidates[0];
-  const parts = candidate && candidate.content && candidate.content.parts;
-  const reply = Array.isArray(parts) ? parts.map((p) => p.text || "").join("").trim() : "";
+  const reply = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
   if (!reply) {
-    const error = new Error("Gemini returned an empty reply");
+    const error = new Error("Groq returned an empty reply");
     error.code = "empty_reply";
     throw error;
   }
@@ -96,7 +92,7 @@ module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
 
   if (req.method === "GET") {
-    return res.status(200).json({ configured: Boolean(process.env.GEMINI_API_KEY) });
+    return res.status(200).json({ configured: Boolean(process.env.GROQ_API_KEY) });
   }
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -111,14 +107,14 @@ module.exports = async function handler(req, res) {
 
   const lang = typeof body.lang === "string" && LANG_NAMES[body.lang] ? body.lang : "en";
   const systemPrompt = buildSystemPrompt(lang);
-  const contents = buildGeminiContents(message, body.history);
+  const messages = buildGroqMessages(message, body.history, systemPrompt);
 
   if (typeof fetch !== "function") {
     return res.status(500).json({ error: "Server fetch is unavailable", code: "no_fetch" });
   }
 
   try {
-    const reply = await callGemini(systemPrompt, contents);
+    const reply = await callGroq(messages);
     res.status(200).json({ reply, privacy: "not-stored" });
   } catch (error) {
     if (error && error.code === "not_configured") {
@@ -129,5 +125,5 @@ module.exports = async function handler(req, res) {
 };
 
 module.exports.buildSystemPrompt = buildSystemPrompt;
-module.exports.buildGeminiContents = buildGeminiContents;
+module.exports.buildGroqMessages = buildGroqMessages;
 module.exports.LANG_NAMES = LANG_NAMES;

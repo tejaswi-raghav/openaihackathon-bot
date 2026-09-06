@@ -409,6 +409,13 @@ function pickVoice(langCode) {
   return voices.find((v) => v.lang && v.lang.toLowerCase().startsWith(prefix)) || null;
 }
 
+function speechLanguage(text) {
+  // English and Hindi are the two fully supported assistant languages. When
+  // a bilingual answer contains a Hindi line, choose the Hindi voice for that
+  // line instead of relying on the page language alone.
+  return /[\u0900-\u097F]/.test(text) ? "hi-IN" : "en-IN";
+}
+
 async function toggleSpeak(text, btn) {
   if (!("speechSynthesis" in window)) {
     btn.textContent = strings().listen;
@@ -426,22 +433,23 @@ async function toggleSpeak(text, btn) {
 
   await voicesReady();
 
-  // Setting .voice explicitly (not just .lang) is what actually makes voice
-  // selection reliable across browsers for anything other than the system's
-  // default language - relying on .lang alone is exactly why a language like
-  // Hindi can silently fail to speak, or get read in the wrong voice, on
-  // browsers that don't do lang-to-voice matching internally.
-  const targetLang = SPEECH_LOCALE[siteLang] || (siteLang === "en" ? "en-IN" : "hi-IN");
-  const voice = pickVoice(targetLang);
-
   const speakNow = () => {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = voice ? voice.lang : targetLang;
-    if (voice) utter.voice = voice;
-    utter.rate = 1;
-    utter.onend = () => resetListenButton(btn);
-    utter.onerror = () => resetListenButton(btn);
-    window.speechSynthesis.speak(utter);
+    const lines = String(text).split(/\n+/).map((line) => line.trim()).filter(Boolean);
+    let index = 0;
+    const speakLine = () => {
+      const line = lines[index];
+      if (!line) return resetListenButton(btn);
+      const targetLang = speechLanguage(line);
+      const voice = pickVoice(targetLang);
+      const utter = new SpeechSynthesisUtterance(line);
+      utter.lang = voice ? voice.lang : targetLang;
+      if (voice) utter.voice = voice;
+      utter.rate = 1;
+      utter.onend = () => { index += 1; index < lines.length ? speakLine() : resetListenButton(btn); };
+      utter.onerror = () => resetListenButton(btn);
+      window.speechSynthesis.speak(utter);
+    };
+    speakLine();
     btn.classList.add("is-active");
     btn.textContent = strings().stop;
     speaking = btn;

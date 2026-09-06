@@ -20,8 +20,8 @@ A citizen-first, low-bandwidth reimagining of India's Right to Information journ
 - `GET /api/authorities?q=railway&level=central` — lightweight authority suggestions.
 - `POST /api/analyze` — deterministic request-quality feedback; request text is not persisted.
 - `GET /api/demo-status?reference=RTI-DEMO-2026-ABC123` — demo-only status boundary.
-- `GET /api/chat` — reports whether the Ask Saathi assistant has a Gemini key configured (`{configured: boolean}`), without exposing the key itself.
-- `POST /api/chat` — Ask Saathi sidebar assistant; requires `GEMINI_API_KEY` (optionally `GEMINI_MODEL`, defaults to `gemini-2.5-flash`) as a Vercel environment variable, falls back to an on-device answer set otherwise.
+- `GET /api/chat` — reports whether the Ask Saathi assistant has a Groq key configured (`{configured: boolean}`), without exposing the key itself.
+- `POST /api/chat` — Ask Saathi sidebar assistant; requires `GROQ_API_KEY` (optionally `GROQ_MODEL`, defaults to `qwen/qwen3.8-27b`) as a server-side environment variable, falls back to an on-device answer set otherwise.
 - `npm test` and `npm run build` verify the citizen journey and serverless helpers.
 
 ## Important

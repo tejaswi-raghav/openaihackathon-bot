@@ -1,1 +1,1 @@
-{"name":"rti-saathi","version":"1.1.0","private":true,"scripts":{"dev":"vite","build":"vite build","preview":"vite preview","test":"node work/smoke.mjs && node work/api-smoke.mjs"},"devDependencies":{"jsdom":"^26.1.0","vite":"^7.1.3"}}
+{"name":"rti-saathi","version":"1.1.0","private":true,"scripts":{"dev":"vite","build":"vite build && mkdir -p dist/server && cp server/worker.mjs dist/server/index.js","preview":"vite preview","test":"node work/smoke.mjs && node work/api-smoke.mjs && node work/worker-smoke.mjs"},"devDependencies":{"jsdom":"^26.1.0","vite":"^7.1.3"}}
