@@ -951,6 +951,22 @@ $("#themeToggle")?.addEventListener("click", () =>
   applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"),
 );
 
+const FONT_SCALES = ["100%", "115%", "130%"];
+let fontScaleIndex = 0;
+try { fontScaleIndex = parseInt(localStorage.getItem("rti-font-scale") || "0", 10) || 0; } catch {}
+fontScaleIndex = Math.max(0, Math.min(FONT_SCALES.length - 1, fontScaleIndex));
+function applyFontScale(index) {
+  fontScaleIndex = Math.max(0, Math.min(FONT_SCALES.length - 1, index));
+  document.documentElement.style.fontSize = FONT_SCALES[fontScaleIndex];
+  try { localStorage.setItem("rti-font-scale", String(fontScaleIndex)); } catch {}
+  const dec = $("#fontDecrease"), inc = $("#fontIncrease");
+  if (dec) dec.disabled = fontScaleIndex === 0;
+  if (inc) inc.disabled = fontScaleIndex === FONT_SCALES.length - 1;
+}
+applyFontScale(fontScaleIndex);
+$("#fontDecrease")?.addEventListener("click", () => applyFontScale(fontScaleIndex - 1));
+$("#fontIncrease")?.addEventListener("click", () => applyFontScale(fontScaleIndex + 1));
+
 if (localStorage.getItem("rti-language-onboarded-v2") === "1") {
   setLanguageGate(false);
 } else {

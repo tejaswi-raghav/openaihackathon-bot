@@ -200,6 +200,34 @@ a {
   align-items: center;
   gap: 0.6rem;
 }
+.font-size-control {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.font-size-control button {
+  border: none;
+  background: var(--white);
+  color: var(--ink);
+  width: 34px;
+  height: 38px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.font-size-control button:first-child {
+  border-right: 1px solid var(--line);
+}
+.font-size-control button:hover:not(:disabled) {
+  background: var(--paper-2);
+  color: var(--chakra);
+}
+.font-size-control button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
 .theme-toggle {
   display: flex;
   align-items: center;
@@ -626,43 +654,6 @@ h1 em:after {
 .how-section,
 .examples-section {
   padding: clamp(4rem, 8vw, 8rem) clamp(1.25rem, 7vw, 7.5rem);
-}
-.life-events-section {
-  padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 7vw, 7.5rem) 0;
-}
-.life-events-section p {
-  color: var(--muted);
-  max-width: 44rem;
-  margin: 0.6rem 0 0;
-}
-.life-event-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 0.7rem;
-  margin-top: 1.8rem;
-}
-.life-event-chip {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.9rem 1.1rem;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--white);
-  color: var(--ink);
-  font-weight: 600;
-  font-size: 0.92rem;
-  text-decoration: none;
-  transition: border-color 0.12s, transform 0.12s, box-shadow 0.12s;
-}
-.life-event-chip span:first-child {
-  font-size: 1.1rem;
-}
-.life-event-chip:hover,
-.life-event-chip:focus-visible {
-  border-color: var(--chakra);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
 }
 .section-heading {
   display: flex;
@@ -2570,7 +2561,7 @@ h1 em:after {
   position: absolute;
   inset: 0;
   z-index: -1;
-  opacity: 0.1;
+  opacity: 0.4;
   background: url("/assets/citizens-aspirational.webp") center/cover no-repeat;
 }
 footer {
@@ -2690,7 +2681,7 @@ footer {
   border-bottom: 1px solid var(--dk-border);
 }
 .chat-sidebar__head .modal-kicker {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   letter-spacing: 0.16em;
   font-weight: 900;
   color: var(--ai-3);
@@ -2704,7 +2695,7 @@ footer {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.66rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--dk-muted);
@@ -2749,7 +2740,7 @@ footer {
 }
 #chatIntro {
   flex: none;
-  font-size: 0.79rem;
+  font-size: 0.88rem;
   color: var(--dk-muted);
   line-height: 1.55;
   margin: 0.9rem 1.2rem 0;
@@ -2765,9 +2756,9 @@ footer {
   border: 1px solid var(--dk-border);
   background: var(--dk-panel-2);
   color: var(--dk-muted);
-  font-size: 0.71rem;
+  font-size: 0.8rem;
   font-weight: 550;
-  padding: 0.42rem 0.75rem;
+  padding: 0.5rem 0.85rem;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.12s, color 0.12s, border-color 0.12s;
@@ -2806,7 +2797,7 @@ footer {
   align-self: flex-end;
 }
 .chat-msg {
-  font-size: 0.83rem;
+  font-size: 0.94rem;
   line-height: 1.6;
 }
 .chat-msg--user {
@@ -2832,7 +2823,7 @@ footer {
 }
 .chat-msg--bot code {
   font-family: var(--mono, ui-monospace, monospace);
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   background: var(--dk-code-bg);
   color: var(--ai-2);
   padding: 0.05rem 0.3rem;
@@ -2850,7 +2841,7 @@ footer {
   color: var(--dk-text);
 }
 .chat-tag {
-  font-size: 0.6rem;
+  font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: var(--ai-3);
@@ -2860,7 +2851,7 @@ footer {
   border: none;
   background: none;
   color: var(--dk-faint);
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   cursor: pointer;
   padding: 0 0.2rem;
 }
@@ -2876,7 +2867,7 @@ footer {
   align-items: center;
   gap: 0.55rem;
   color: var(--dk-muted);
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   padding: 0.3rem 0;
 }
 .chat-work .orb {
@@ -2920,7 +2911,7 @@ footer {
   background: none;
   padding: 0.5rem 0;
   font: inherit;
-  font-size: 0.83rem;
+  font-size: 0.94rem;
   max-height: 120px;
   line-height: 1.45;
   color: var(--dk-text);
@@ -2975,27 +2966,30 @@ footer {
   width: 16px;
   height: 16px;
 }
-.chat-agent-link {
+.chat-agent-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   flex: none;
-  align-self: flex-start;
-  margin: 0 1.2rem 0.6rem;
-  border: none;
-  background: none;
-  color: var(--dk-muted);
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  border: 1px solid var(--dk-border);
+  background: var(--dk-panel-2);
+  color: var(--dk-text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
   cursor: pointer;
-  padding: 0;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
 }
-.chat-agent-link:hover {
-  color: var(--ai-2);
+.chat-agent-btn:hover {
+  background: var(--ai);
+  border-color: var(--ai);
+  color: #fff;
 }
 .chat-note {
   flex: none;
   padding: 0 1.2rem 1rem;
-  font-size: 0.68rem;
+  font-size: 0.73rem;
   color: var(--dk-faint);
   display: flex;
   gap: 0.4rem;

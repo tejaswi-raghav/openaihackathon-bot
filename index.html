@@ -17,6 +17,11 @@
       try {
         document.documentElement.dataset.theme = localStorage.getItem("rti-theme") || "light";
       } catch (e) {}
+      try {
+        var rtiFontScales = ["100%", "115%", "130%"];
+        var rtiFontIndex = parseInt(localStorage.getItem("rti-font-scale") || "0", 10) || 0;
+        document.documentElement.style.fontSize = rtiFontScales[rtiFontIndex] || "100%";
+      } catch (e) {}
     </script>
   </head>
   <body>
@@ -163,6 +168,10 @@
         </button>
       </nav>
       <div class="header-actions">
+        <div class="font-size-control" role="group" aria-label="Text size">
+          <button type="button" id="fontDecrease" aria-label="Decrease text size">A−</button>
+          <button type="button" id="fontIncrease" aria-label="Increase text size">A+</button>
+        </div>
         <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
@@ -407,27 +416,6 @@
               dates in one timeline.
             </p>
           </article>
-        </div>
-      </section>
-
-      <section class="life-events-section" id="lifeEvents" aria-labelledby="lifeEventsTitle">
-        <span class="section-label" data-i18n="lifeEventsLabel">COMMON THINGS PEOPLE ASK ABOUT</span>
-        <h2 id="lifeEventsTitle" data-i18n="lifeEventsTitle">Find RTI questions on your topic</h2>
-        <p data-i18n="lifeEventsBody">
-          Pick what you need to know about, and we'll take you straight to
-          the kind of RTI questions people commonly ask.
-        </p>
-        <div class="life-event-grid">
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">👴</span> <span data-i18n="topicPension">Pension</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🍚</span> <span data-i18n="topicRation">Ration card</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🏥</span> <span data-i18n="topicHealth">Hospital &amp; medical records</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🎓</span> <span data-i18n="topicScholarship">Scholarship &amp; education</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🏠</span> <span data-i18n="topicLand">Land &amp; property records</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">💧</span> <span data-i18n="topicUtilities">Water &amp; electricity</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">🛣️</span> <span data-i18n="topicRoads">Roads &amp; public works</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">👮</span> <span data-i18n="topicPolice">Police complaint status</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">💰</span> <span data-i18n="topicWelfare">Welfare scheme funds</span></a>
-          <a class="life-event-chip" href="#examples"><span aria-hidden="true">📄</span> <span data-i18n="topicAppeal">Appeal or complaint status</span></a>
         </div>
       </section>
 
@@ -981,6 +969,9 @@
           <span class="chat-status" id="chatStatus" hidden></span>
         </div>
         <div class="chat-sidebar__head-actions">
+          <button type="button" class="chat-agent-btn" id="chatAgentButton" aria-label="Connect with an agent">
+            <span aria-hidden="true">🧑</span> Agent
+          </button>
           <button type="button" class="close-button" data-action="close-chat" aria-label="Close">×</button>
         </div>
       </header>
@@ -988,9 +979,6 @@
         I can explain how this site works — filing, fees, timelines, or finding the right authority.
       </p>
       <div class="chat-chips" id="chatChips"></div>
-      <button type="button" class="chat-agent-link" id="chatAgentButton">
-        <span aria-hidden="true">🧑</span> Connect with an agent
-      </button>
       <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
       <form class="chat-form" id="chatForm">
         <div class="chat-input-wrap">
